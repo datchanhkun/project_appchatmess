@@ -1,0 +1,6 @@
+<!-- Kiem tra success co ton tai -->
+<% if(success != "") { %>
+  <% success.forEach((item) => { %>
+      <div class="master-success-message alert alert-success"><%- item %></div>
+  <% }); %>
+<% } %>

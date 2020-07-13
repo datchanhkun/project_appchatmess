@@ -1,0 +1,15 @@
+<!-- Kiem tra errors co ton tai -->
+<% if(errors != "") { %>
+    <% errors.forEach((item) => { %>
+        <script>openLoginModal();</script>
+        <div class="alert alert-danger"><%- item %></div>
+    <% }); %>
+<% } %>
+
+<!-- Kiem tra success co ton tai -->
+<% if(success != "") { %>
+    <% success.forEach((item) => { %>
+        <script>openLoginModal();</script>
+        <div class="alert alert-success"><%- item %></div>
+    <% }); %>
+<% } %>
