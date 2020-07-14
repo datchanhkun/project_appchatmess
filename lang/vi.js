@@ -11,7 +11,9 @@ export const transErrors = {
   account_removed: "Tài khoản này đã bị gỡ bỏ khỏi hệ thống",
   account_not_active: "Email đã đăng ký nhưng chưa xác thực.Vui lòng kiểm tra email để xác thực tài khoản",
   login_failed: "Sài tài khoản hoặc mật khẩu!",
-  server_error: "Server đang gặp lỗi, vui lòng đăng nhập lại sau"
+  server_error: "Server đang gặp lỗi, vui lòng đăng nhập lại sau",
+  avatar_type: "Định dạng file không hợp lệ!",
+  avatar_size: "Ảnh upload cho phép tối đa là 1MB!"
 };
 
 export const transSuccess = {
@@ -21,6 +23,7 @@ export const transSuccess = {
   loginSuccess: (username) => {
     return `Xin chào ${username}, chúc bạn có một trải nghiệm tuyệt vời với ứng dụng của chúng tôi`
   },
-  logoutSuccess: "Đăng xuất tài khoản thành công!"
+  logoutSuccess: "Đăng xuất tài khoản thành công!",
+  avatar_updated: "Cập nhật ảnh đại diện thành công!"
 };
 

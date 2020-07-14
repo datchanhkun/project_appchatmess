@@ -84,8 +84,8 @@ $(document).ready(function () {
   //Bat su kien click button save
   $("#input-btn-update-user").bind("click", function () {
     //Kiem tra object rong va avatar = null
-    if($.isEmptyObject(userInfo) && !userAvatar) {
-      alertify.notify("Bạn phải thay đổi thông tin trước khi cập nhật dữ liệu mới!","error",7);
+    if ($.isEmptyObject(userInfo) && !userAvatar) {
+      alertify.notify("Bạn phải thay đổi thông tin trước khi cập nhật dữ liệu mới!", "error", 7);
     }
 
     //request ajax de gui userAvatar len sever khi upload anh
@@ -97,21 +97,35 @@ $(document).ready(function () {
       contentType: false,
       processData: false,
       data: userAvatar,
-      success: function(result){
-
+      success: function (result) {
+        //Hiển thị thông báo update thành công
+        $(".user-modal-alert-success").find("span").text(result.message);
+        //Hien thi voi css
+        $(".user-modal-alert-success").css("display", "block");
+        //Update avatar small on navbar
+        $("#navbar-avatar").attr("src",result.imageSrc);
+        //Update lại đường dẫn mặc định 
+        originAvatarSrc = result.imageSrc;
+        //Reset all khi upload img thanh cong
+        $("#input-btn-cancel-update-user").click(); // jquery sẽ tự động click button cancel
       },
-      error: function(result){
-
+      error: function (error) {
+        //Xuat loi ra man hinh, 'error.responseText' ghi đè lỗi 
+        // console.log(error);
+        $(".user-modal-alert-error").find("span").text(error.responseText);
+        //Xuat ra loi voi css
+        $(".user-modal-alert-error").css("display", "block");
+        //Reset all khi upload img loi
+        $("#input-btn-cancel-update-user").click(); // jquery sẽ tự động click button cancel
       },
     });
-    // console.log(userAvatar);
-    // console.log(userInfo);
   });
 
   //Bat su kien click button cancel
   $("#input-btn-cancel-update-user").bind("click", function () {
     userAvatar = null;
     userInfo = {};
-    $("#user-modal-avatar").attr("src",originAvatarSrc);
+    $("#input-change-avatar").val(null);
+    $("#user-modal-avatar").attr("src", originAvatarSrc);
   });
 });

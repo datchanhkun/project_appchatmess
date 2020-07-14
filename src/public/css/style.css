@@ -423,8 +423,9 @@ label:focus,
 }
 
 .navbar-brand>img {
-  margin: -12px 0px 0px 7px;
-  width: 150px;
+  margin: -12px 0px 0px 120px;
+  width: 100px;
+  height: 50px;
   -webkit-filter: brightness(130%);
   filter: brightness(130%);
 }
@@ -1274,4 +1275,9 @@ label:focus,
 
 #user-profile-modal input:hover, #user-profile-modal input:focus {
   border-color: #576574
+}
+
+/* Hien thi error va success khi upload user */
+.user-modal-alert-error , .user-modal-alert-success {
+  display: none;
 }
