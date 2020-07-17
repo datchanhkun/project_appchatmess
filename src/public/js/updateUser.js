@@ -3,6 +3,7 @@ let userAvatar = null;
 let userInfo = {};
 let originAvatarSrc = null;
 let originUserInfo = {};
+let userUpdatePassword = {};
 //Ham sua thong tin user
 function updateUserInfo() {
   //Bat su kien chon file anh va preview avt truoc khi save upload image
@@ -113,6 +114,53 @@ function updateUserInfo() {
     }
     userInfo.phone = $("#input-change-phone").val();
   });
+
+  //Bắt sự kiện change mật khẩu hiện tại
+  $("#input-change-current-password").bind("change", function () {
+    let currentPassword = $("#input-change-current-password").val();
+    let regexPassword = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/);
+    if(!regexPassword.test(currentPassword)) {
+      alertify.notify("Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm cả chữ hoa, chữ thường, chữ số và ký tự đặc biệt", "error", 7);
+      $("#input-change-current-password").val(null); //Gán lại giá trị gốc ban đầu
+      delete userUpdatePassword.currentPassword; //Xóa dữ liệu update khi đúng lần 1, lần 2 sai
+      return false;
+    }
+    userUpdatePassword.currentPassword = currentPassword;
+  });
+
+  //Bắt sự kiện change mật khẩu mới
+  $("#input-change-new-password").bind("change", function () {
+    let newPassword = $("#input-change-new-password").val();
+    let regexPassword = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/);
+    if(!regexPassword.test(newPassword)) {
+      alertify.notify("Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm cả chữ hoa, chữ thường, chữ số và ký tự đặc biệt", "error", 7);
+      $("#input-change-new-password").val(null); //Gán lại giá trị gốc ban đầu
+      delete userUpdatePassword.newPassword; //Xóa dữ liệu update khi đúng lần 1, lần 2 sai
+      return false;
+    }
+    userUpdatePassword.newPassword = newPassword;
+  });
+
+  //Bắt sự kiện change nhập lại mật khẩu
+  $("#input-change-confirm-new-password").bind("change", function () {
+    let confirmNewPassword = $("#input-change-confirm-new-password").val();
+    //Kiểm tra nếu chưa nhập MK mới
+    if(!userUpdatePassword.newPassword) { 
+      alertify.notify("Bạn chưa nhập mật khẩu mới!", "error", 7);
+      $("#input-change-confirm-new-password").val(null); //Gán lại giá trị gốc ban đầu
+      delete userUpdatePassword.confirmNewPassword; //Xóa dữ liệu update khi đúng lần 1, lần 2 sai
+      return false;
+    }
+    //Kiểm tra nếu nhập lại mật khẩu không trùng khớp
+    if(confirmNewPassword !== userUpdatePassword.newPassword) { 
+      alertify.notify("Nhập lại mật khẩu chưa chính xác!", "error", 7);
+      $("#input-change-confirm-new-password").val(null); //Gán lại giá trị gốc ban đầu
+      delete userUpdatePassword.confirmNewPassword; //Xóa dữ liệu update khi đúng lần 1, lần 2 sai
+      return false;
+    }
+    userUpdatePassword.confirmNewPassword = confirmNewPassword;
+  });
+
 }
 //request ajax de gui userAvatar len sever khi upload anh
 function callUpdateUserAvatar() {
@@ -188,6 +236,32 @@ function callUpdateUserInfor() {
     },
   });
 }
+
+function callUpdateUserPassword() {
+  $.ajax({
+    url: "/user/update-password",
+    type: "put", //'put' la method khi update 1 field dung' voi quy tac chuan cua API
+    data: userUpdatePassword,
+    success: function (result) {
+      //Hiển thị thông báo update thành công
+      $(".user-modal-password-alert-success").find("span").text(result.message);
+      //Hien thi voi css
+      $(".user-modal-password-alert-success").css("display", "block");
+
+      //Reset all
+      $("#input-btn-cancel-user-password").click();
+    },
+    error: function (error) {
+      //Xuat loi ra man hinh, 'error.responseText' ghi đè lỗi 
+      // console.log(error);
+      $(".user-modal-password-alert-error").find("span").text(error.responseText);
+      //Xuat ra loi voi css
+      $(".user-modal-password-alert-error").css("display", "block");
+      //Reset all khi upload img loi
+      $("#input-btn-cancel-update-user").click(); // jquery sẽ tự động click button cancel
+    },
+  });
+}
 $(document).ready(function () {
   //Lay lai duong dan goc' ban dau cua image
   originAvatarSrc = $("#user-modal-avatar").attr("src");
@@ -230,5 +304,41 @@ $(document).ready(function () {
     $("#input-change-address").val(originUserInfo.address);
     $("#input-change-phone").val(originUserInfo.phone);
 
+  });
+
+  //Bắt sự kiện click button save password
+  $("#input-btn-update-user-password").bind("click", function () {
+    //Nếu không tồn tại 1 trong 3 field thì trả về lỗi
+    if(!userUpdatePassword.currentPassword || !userUpdatePassword.newPassword || !userUpdatePassword.confirmNewPassword) {
+      alertify.notify("Bạn phải nhập đầy đủ thông tin!", "error", 7);
+      return false;
+    }
+    //Hiển thị modal xác nhận có thay đổi mật khẩu hay không (sweetalert2)
+    Swal.fire({
+      title: "Bạn có chắc chắn muốn thay đỏi mật khẩu?",
+      text: "Bạn không thể hoàn tác lại thao tác này!",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: "#2ECC71",
+      cancelButtonColor: "#ff7675",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy"
+    }).then((result) => {
+      if(!result.value) {
+        $("#input-btn-cancel-user-password").click();
+        return false;
+      }
+    callUpdateUserPassword();
+    });
+
+  });
+
+  //Bắt sự kiện click button cancel password
+  $("#input-btn-cancel-user-password").bind("click", function () {
+    //Reset ALL
+    userUpdatePassword = {};
+    $("#input-change-current-password").val(null);
+    $("#input-change-new-password").val(null);
+    $("#input-change-confirm-new-password").val(null);
   });
 });

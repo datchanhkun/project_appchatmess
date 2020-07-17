@@ -1278,6 +1278,7 @@ label:focus,
 }
 
 /* Hien thi error va success khi upload user */
-.user-modal-alert-error , .user-modal-alert-success {
+.user-modal-alert-error , .user-modal-alert-success
+, .user-modal-password-alert-success , .user-modal-password-alert-error {
   display: none;
 }
