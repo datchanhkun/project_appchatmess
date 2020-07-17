@@ -50,6 +50,9 @@ UserSchema.statics = {
   updateUser(id, item) {
     //return về dữ liệu cũ sau khi update thành công
     return this.findByIdAndUpdate(id,item).exec();
+  },
+  updatePassword(id,hashedPassword) {
+    return this.findByIdAndUpdate(id, {"local.password" : hashedPassword}).exec();
   }
 };
 

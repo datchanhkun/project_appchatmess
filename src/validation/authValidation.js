@@ -11,8 +11,7 @@ let register = [
 
   check("password",transValidation.password_incorrect)
   .isLength({min: 8})
-  .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/
-  ),
+  .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/),
 
   check("password_confirmation",transValidation.re_password_incorrect)
   .custom((value, {req}) => {

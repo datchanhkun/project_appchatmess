@@ -21,6 +21,22 @@ let updateInfo = [
 
 ];
 
+let updatePassword = [
+  check("currentPassword", transValidation.password_incorrect)
+    .isLength({min: 8})
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/),
+  
+  check("newPassword", transValidation.password_incorrect)
+    .isLength({min: 8})
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/),
+    
+  check("confirmNewPassword", transValidation.re_password_incorrect)
+    .custom((value, {req}) => {
+      return value === req.body.newPassword;
+    })
+];
+
 module.exports = {
-  updateInfo : updateInfo
+  updateInfo : updateInfo,
+  updatePassword: updatePassword
 }
