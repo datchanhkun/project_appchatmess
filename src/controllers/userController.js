@@ -99,7 +99,7 @@ let updatePassword = async (req, res) => {
     let errors = Object.values(validationErrors.mapped());
     errors.forEach(item => {
       errorArr.push(item.msg);
-    });;
+    });
     return res.status(500).send(errorArr);
   }
 
