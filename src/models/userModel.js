@@ -53,6 +53,23 @@ UserSchema.statics = {
   },
   updatePassword(id,hashedPassword) {
     return this.findByIdAndUpdate(id, {"local.password" : hashedPassword}).exec();
+  },
+  //Hàm tìm kiếm user còn lại trong contact sau khi đã lọc
+  findAllForAddContact(deprecatedUserIds, keyword) {
+    return this.find({
+      $and: [
+        //"nin: viet tat cua not in"
+        //Lọc ra những id không nằm trong mảng deprecatedUserIds
+        {"_id": {$nin : deprecatedUserIds}},
+        {$or: [
+          //Tìm những user có username gần giống với keyword mà người dùng nhập vào theo $regex
+          {"username" : {"$regex": keyword}},
+          {"local.email" : {"$regex": keyword}},
+          {"facebook.email" : {"$regex": keyword}},
+          {"google.email" : {"$regex": keyword}}
+        ]}
+      ]
+    },{_id: 1, username: 1, address: 1, avatar: 1}).exec(); //cho phép lấy ra những field trong DB ra
   }
 };
 

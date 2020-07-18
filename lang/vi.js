@@ -7,7 +7,8 @@ export const transValidation = {
   update_username: "Username chỉ được chứa 3-17 kí tự và không được phép chứa kí tự đặc biệt!",
   update_gender: "Lỗi hệ thống!",
   update_address: "Địa chỉ chỉ được chứa 3-30 kí tự!",
-  update_phone: "Số điện thoại bắt đầu và số 0 và chỉ bao gồm 10 kí tự!"
+  update_phone: "Số điện thoại bắt đầu và số 0 và chỉ bao gồm 10 kí tự!",
+  keyword_find_user: "Chỉ cho phép nhập vào chữ cái , số và khoảng trắng"
 };
 
 export const transErrors = {
