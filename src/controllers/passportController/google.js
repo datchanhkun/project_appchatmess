@@ -42,7 +42,7 @@ let initPassportGoogle = () => {
       //Truong hop dang nhap thanh cong
       return done(null,user,req.flash("success",transSuccess.loginSuccess(user.username)));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return done(null,false,req.flash("errors",transErrors.server_error));
     }
   }));

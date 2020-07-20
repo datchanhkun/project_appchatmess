@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import { user, contact } from "../services";
 
 let Schema = mongoose.Schema;
 
 let ContactSchema = new Schema({
-  userID: String,
+  userId: String,
   contactId: String,
   status: {type: Boolean, default: false},
   createAt: {type: Number, default: Date.now},
@@ -23,6 +24,34 @@ ContactSchema.statics = {
       $or: [
         {"userId": userId},
         {"contactId": userId}
+      ]
+    }).exec();
+  },
+  //Hàm kiểm tra xem userId và contactId đã là bạn bè hay chưa
+  //A: userId , B: contactId
+  checkExists(userId,contactId) {
+    return this.findOne({
+      $or: [
+        //Kiểm tra chéo
+        //Trường hợp A gửi lời mời kb cho B rồi nên kiểm tra chéo để B không gửi được lời mời KB cho A
+        {$and: [
+          {"userId": userId}, //Kiểm tra userId có trùng với userId truyền vào
+          {"contactId" : contactId}
+        ]},
+        {$and: [
+          {"userId" : contactId},
+          {"contactId": userId} //Kiểm tra userId có trùng với userId truyền vào
+        ]}
+      ]
+    }).exec();
+  },
+
+  //Hàm xóa 1 yêu cầu kết bạn
+  removeRequestContact(userId,contactId) {
+    return this.remove({
+      $and: [
+        {"userId": userId}, //Kiểm tra userId có trùng với userId truyền vào
+        {"contactId" : contactId}
       ]
     }).exec();
   }

@@ -40,7 +40,7 @@ let updateAvatar = (req, res) => {
       }
       return res.status(500).send(error);
     }
-    console.log(req.file);
+    // console.log(req.file);
     //Trường hợp upload thành công
     try {
       let updateUserItem = {

@@ -43,7 +43,7 @@ let initPassportFacebook = () => {
       //Truong hop dang nhap thanh cong
       return done(null,user,req.flash("success",transSuccess.loginSuccess(user.username)));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return done(null,false,req.flash("errors",transErrors.server_error));
     }
   }));
@@ -55,7 +55,7 @@ let initPassportFacebook = () => {
 
   passport.deserializeUser((id,done) => {
     UserModel.findUserById(id)
-    .then(user => {
+    .then((user) => {
       return done(null,user);
     })
     .catch(error => {
