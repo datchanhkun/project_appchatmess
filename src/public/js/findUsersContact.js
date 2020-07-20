@@ -16,6 +16,10 @@ function callFindUsers(element) {
     $.get(`/contact/find-users/${keyword}`, function(data) {
       //append html render được vào ul
       $("#find-user ul").html(data);
+      //js/addContact.js
+      addContact();
+      //js/removeRequstContact.js
+      removeRequestContact();
     });
   }
 }
