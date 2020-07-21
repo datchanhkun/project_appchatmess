@@ -1,3 +1,5 @@
+//Biến toàn cục cho socket io
+const socket = io();
 
 function nineScrollLeft() {
   $('.left').niceScroll({
