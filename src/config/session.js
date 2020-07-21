@@ -11,11 +11,11 @@ let sessionStore = new MongoStore({
 });
 
 //cau hinh session
-let configSession = (app) => {
+let config = (app) => {
   app.use(session({
     key: "express.sid",
-    secret: "mySecret",
-    store: sessionStore,
+    key: process.env.SESSION_KEY,
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
     cookie: {
@@ -24,4 +24,7 @@ let configSession = (app) => {
   }));
 };
 
-module.exports = configSession;
+module.exports =  {
+  config : config,
+  sessionStore : sessionStore
+}

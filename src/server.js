@@ -5,9 +5,15 @@ import configViewEngine from "./config/viewEngine";
 import initRouters from "./routers/web";
 import bodyParser from "body-parser";
 import connectFlash from "connect-flash";
-import configSession from "./config/session";
+import session from "./config/session";
 import passport from "passport";
+import http from "http";
+import socketio from "socket.io";
+import initSockets from "./sockets/index";
 
+
+import cookieParser from "cookie-parser";
+import configSocketIo from "./config/socketio";
 // // Gia lap https de login fb
 // import pem from "pem";
 // import https from "https";
@@ -48,11 +54,14 @@ import passport from "passport";
 //Init app
 let app = express();
 
+//Init server với socket.io và express app
+let server = http.createServer(app);
+let io = socketio(server);
 //ket noi den mongodb
 ConnectDB();
 
 //Sau khi ket noi den mongodb roi moi goi den session
-configSession(app);
+session.config(app);
 
 //Cau hinh view engine
 configViewEngine(app);
@@ -63,12 +72,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //su dung flash messages
 app.use(connectFlash());
 
+//Sử dụng cookie parser
+app.use(cookieParser());
+
 //cau hinh passport js
 app.use(passport.initialize());
 app.use(passport.session());
 //Init tat ca cac router
 initRouters(app);
 
-app.listen(process.env.APP_PORT, process.env.APP_HOST, () => {
+//Config for socket.io
+configSocketIo(io,cookieParser,session.sessionStore);
+
+//Init tat ca socket
+initSockets(io);
+
+server.listen(process.env.APP_PORT, process.env.APP_HOST, () => {
     console.log(`App listening on port ${process.env.APP_PORT}`);
 });
