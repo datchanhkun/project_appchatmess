@@ -26,6 +26,15 @@ NotificationSchema.statics = {
   //Load thông báo có giới hạn là 10 , "createAt": -1 mới nhất để lên trên
   getByUserIdAndLimit(userId, limit) {
     return this.find({"receiverId" : userId}).sort({"createAt": -1}).limit(limit).exec();
+  },
+  //hàm đếm số lượng thông báo chưa đọc ở model để gọi qua service
+  countNotiUnread(userId) {
+    return this.count({ //sử dụng hàm count của mongoose
+      $and: [
+        {"receiverId" : userId},
+        {"isRead": false}
+      ]
+    }).exec();
   }
 }
 
@@ -37,15 +46,15 @@ const NOTIFICATION_CONTENTS = {
   getContent: (notificationType ,isRead ,userId, username, userAvatar) => {
     if(notificationType === NOTIFICATION_TYPES.ADD_CONTACT) {
       if(!isRead) {
-        return `<span class="notif-readed-false" data-uid="${userId}">
-        <img class="avatar-small" src="images/users/${userAvatar}" alt=""> 
-        <strong>${username}</strong> đã gửi cho bạn một lời mời kết bạn!
-        </span><br><br><br>`;
+        return `<div class="notif-readed-false" data-uid="${userId}">
+                <img class="avatar-small" src="images/users/${userAvatar}" alt=""> 
+                <strong>${username}</strong> đã gửi cho bạn một lời mời kết bạn!
+                </div>`;
       } else {
-        return `<span data-uid="${userId}">
-        <img class="avatar-small" src="images/users/${userAvatar}" alt=""> 
-        <strong>${username}</strong> đã gửi cho bạn một lời mời kết bạn!
-        </span><br><br><br>`;
+        return `<div data-uid="${userId}">
+                <img class="avatar-small" src="images/users/${userAvatar}" alt=""> 
+                <strong>${username}</strong> đã gửi cho bạn một lời mời kết bạn!
+                </div>`;
       }
 
     }
