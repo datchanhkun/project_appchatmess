@@ -10,12 +10,13 @@ let sessionStore = new MongoStore({
   // autoRemove: "native" // khi het han cookie thi se tu dong xoa di cookie trong mongodb
 });
 
+
 //cau hinh session
 let config = (app) => {
   app.use(session({
-    key: "express.sid",
     key: process.env.SESSION_KEY,
     secret: process.env.SESSION_SECRET,
+    store: sessionStore,
     resave: true,
     saveUninitialized: false,
     cookie: {
@@ -25,6 +26,6 @@ let config = (app) => {
 };
 
 module.exports =  {
-  config : config,
-  sessionStore : sessionStore
-}
+  config: config,
+  sessionStore: sessionStore
+};
