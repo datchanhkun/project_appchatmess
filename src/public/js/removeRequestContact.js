@@ -24,7 +24,8 @@ function removeRequestContact() {
 
 //id, username, avatar lấy từ addNewContact
 socket.on("response-remove-request-contact", function(user) {
-  $(".noti_content").find(`span[data-uid = ${user.id}]`).remove();
+  $(".noti_content").find(`div[data-uid = ${user.id}]`).remove();
+  $("ul.list-notifications").find(`li>div[data-uid = ${user.id}]`).parent().remove();
   //Xóa yêu cầu kết bạn ở modal
   decreaseNumberNotifContact("count-request-contact-received");
 
