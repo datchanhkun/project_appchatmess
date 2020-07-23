@@ -49,10 +49,23 @@ let readMore = (currentUserId,skipNumberNotif) => {
     }
   });
 };
+//Xử lý login cho hàm đánh dấu tất cả bên controller
+let markAllAsRead = (currentUserId,targetUsers) => {
+  return new Promise(async(resolve, reject)=>{
+    try {
+      await NotificationModel.model.markAllAsRead(currentUserId,targetUsers);
+      resolve(true);
+    } catch (error) {
+       console.log(`Error when mark notification as read: ${error}`)
+      reject(false);
+    }
+  });
+};
 
 
 module.exports = {
   getNotifications : getNotifications,
   countNotiUnread: countNotiUnread,
-  readMore: readMore
+  readMore: readMore,
+  markAllAsRead: markAllAsRead
 };
