@@ -40,6 +40,15 @@ NotificationSchema.statics = {
   readMore(userId, skipNumber,limit) {
     //Sau khi lấy ra dược 10 thông báo thì hàm skip trong mongoose sẽ bỏ qua 10 thông báo đó và lấy thêm 10 bản ghi tiếp theo
     return this.find({"receiverId" : userId}).sort({"createAt": -1}).skip(skipNumber).limit(limit).exec();
+  },
+  markAllAsRead(userId,targetUsers) {
+    //Sử dụng updateMany để update nhiều dữ liệu với 2 đối tượng là điều kiện lọc và bản ghi để update là gì
+    return this.updateMany({
+      $and: [
+        {"receiverId" : userId},//CurrentuserId
+        {"senderId": {$in: targetUsers}}//những người gửi nằm trong mảng targetUsers
+      ]
+    },{"isRead": true}).exec();
   }
 }
 

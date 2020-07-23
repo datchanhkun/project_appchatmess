@@ -12,7 +12,17 @@ let readMore = async(req,res) => {
     return res.status(500).send(error);
   }
 };
+let markAllAsRead = async(req,res) => {
+  try {
+    //req.body.targetUsers lấy từ key bên markNotifAsRead.js
+    let mark = await notification.markAllAsRead(req.user._id, req.body.targetUsers);
+    return res.status(200).send(mark);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
 
 module.exports = {
-  readMore : readMore
+  readMore : readMore,
+  markAllAsRead: markAllAsRead
 };
