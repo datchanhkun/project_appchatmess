@@ -35,6 +35,11 @@ NotificationSchema.statics = {
         {"isRead": false}
       ]
     }).exec();
+  },
+  //Hàm đọc thêm thông báo để gọi qua bên service
+  readMore(userId, skipNumber,limit) {
+    //Sau khi lấy ra dược 10 thông báo thì hàm skip trong mongoose sẽ bỏ qua 10 thông báo đó và lấy thêm 10 bản ghi tiếp theo
+    return this.find({"receiverId" : userId}).sort({"createAt": -1}).skip(skipNumber).limit(limit).exec();
   }
 }
 

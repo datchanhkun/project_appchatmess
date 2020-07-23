@@ -47,11 +47,11 @@ function enableEmojioneArea(chatId) {
 }
 
 function spinLoaded() {
-  $('#loader').css('display', 'none');
+  $('.lds-roller').css('display', 'none');
 }
 
 function spinLoading() {
-  $('#loader').css('display', 'block');
+  $('.lds-roller').css('display', 'block');
 }
 
 function ajaxLoading() {
