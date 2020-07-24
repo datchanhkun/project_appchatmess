@@ -41,7 +41,7 @@ let addNew = async (req, res) => {
   } catch (error) {
     return res.status(500).send(error);
   }
-}
+};
 let removeRequestContact = async (req, res) => {
  
   try {
@@ -55,11 +55,54 @@ let removeRequestContact = async (req, res) => {
   } catch (error) {
     return res.status(500).send(error);
   }
-}
+};
+//Read more contacts danh bạ
+let readMoreContacts = async (req,res) => {
+  try {
+    //?skipNumber from readMoreContacts.js
+    let skipNumberContacts = +(req.query.skipNumber);
+    // console.log(typeof skipNumberNotif);
+    //Xem thêm thông báo
+    let newContactUsers = await contact.readMoreContacts(req.user._id, skipNumberContacts);
+    return res.status(200).send(newContactUsers);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+//Read more contacts đang chờ xác nhận
+let readMoreContactsSent = async (req,res) => {
+  try {
+    //?skipNumber from readMoreContacts.js
+    let skipNumberContacts = +(req.query.skipNumber);
+    // console.log(typeof skipNumberNotif);
+    //Xem thêm thông báo
+    let newContactUsers = await contact.readMoreContactsSent(req.user._id, skipNumberContacts);
+    return res.status(200).send(newContactUsers);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+//Read more contacts yêu cầu kết bạn
+let readMoreContactsReceived = async (req,res) => {
+  try {
+    //?skipNumber from readMoreContacts.js
+    let skipNumberContacts = +(req.query.skipNumber);
+    // console.log(typeof skipNumberNotif);
+    //Xem thêm thông báo
+    let newContactUsers = await contact.readMoreContactsReceived(req.user._id, skipNumberContacts);
+    return res.status(200).send(newContactUsers);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
 
 
 module.exports = {
   findUsersContact : findUsersContact,
   addNew : addNew,
-  removeRequestContact : removeRequestContact
+  removeRequestContact : removeRequestContact,
+  readMoreContacts: readMoreContacts,
+  readMoreContactsSent: readMoreContactsSent,
+  readMoreContactsReceived: readMoreContactsReceived
 };

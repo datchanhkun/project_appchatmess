@@ -69,21 +69,21 @@
                                 <li class="_contactList" data-uid="<%= user._id %>">
                                     <div class="contactPanel">
                                         <div class="user-avatar">
-                                            <img src="images/users/<%= user.avatar %>"" alt="">
+                                            <img src="images/users/<%= user.avatar %>" alt="">
                                             </div>
                                             <div class=" user-name">
                                             <p>
-                                                <%= user.username %>"
+                                                <%= user.username %>
                                             </p>
                                         </div>
                                         <br>
                                         <div class="user-address">
-                                            <%= user.address %>"
+                                            <span> <%= user.address %> </span> 
                                         </div>
-                                        <div class="user-talk" data-uid="<%= user._id %>"">
+                                        <div class="user-talk" data-uid="<%= user._id %>">
                                                 Trò chuyện
                                             </div>
-                                            <div class=" user-remove-contact action-danger" data-uid="<%= user._id %>"">
+                                            <div class=" user-remove-contact action-danger" data-uid="<%= user._id %>">
                                                 Xóa liên hệ
                                             </div>
                                         </div>
@@ -92,7 +92,7 @@
                             </ul>
                             <hr>
                             <div class=" read-more-contacts">
-                                            <a href="javascript:void(0)" id="link-read-more-notif">
+                                            <a href="javascript:void(0)" id="link-read-more-contacts">
                                                 <strong>Xem thêm 10 bạn bè </strong>
                                             </a>
                                         </div>
@@ -127,7 +127,7 @@
                                     <% }); %>
                                 </ul>
                                 <div class="read-more-contacts-sent">
-                                    <a href="javascript:void(0)" id="link-read-more-notif">
+                                    <a href="javascript:void(0)" id="link-read-more-contacts-sent">
                                         <strong>Xem thêm 10 người khác </strong>
                                     </a>
                                 </div>
@@ -165,7 +165,7 @@
                                     <% }); %>
                                 </ul>
                                 <div class="read-more-contacts-received">
-                                    <a href="javascript:void(0)" id="link-read-more-notif">
+                                    <a href="javascript:void(0)" id="link-read-more-contacts-received">
                                         <strong>Xem thêm 10 người khác </strong>
                                     </a>
                                 </div>

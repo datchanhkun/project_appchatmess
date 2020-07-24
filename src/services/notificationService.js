@@ -9,7 +9,7 @@ let getNotifications = (currentUserId) => {
       //Map tương tự foreach nhưng lại return ra 1 mảng mới
       let getNotifContents = notifications.map(async(notification) => {
         //Query vào bảng user
-        let sender = await UserModel.findUserById(notification.senderId);
+        let sender = await UserModel.getNormalUserDataById(notification.senderId);
         return NotificationModel.contents.getContent(notification.type, notification.isRead,sender._id,sender.username, sender.avatar);
       });
 
@@ -40,7 +40,7 @@ let readMore = (currentUserId,skipNumberNotif) => {
       //Sau khi có được newNotification thì xuất dữ liệu ra cho người dùng xem
       let getNotifContents = newNotification.map(async(notification) => {
         //Query vào bảng user
-        let sender = await UserModel.findUserById(notification.senderId);
+        let sender = await UserModel.getNormalUserDataById(notification.senderId);
         return NotificationModel.contents.getContent(notification.type, notification.isRead,sender._id,sender.username, sender.avatar);
       });
       resolve(await Promise.all(getNotifContents));

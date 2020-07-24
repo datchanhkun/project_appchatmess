@@ -63,6 +63,14 @@ let initRouters = (app) => {
   //Delete contact
   router.delete("/contact/remove-request-contact", auth.checkLoggedIn , contact.removeRequestContact);
 
+  //Read more contacts danh bạ
+  router.get("/contact/read-more-contacts", auth.checkLoggedIn , contact.readMoreContacts);
+  //Read more contacts đang chờ xác nhận
+  router.get("/contact/read-more-contacts-sent", auth.checkLoggedIn , contact.readMoreContactsSent);
+  //Read more contacts yêu cầu kết bạn
+  router.get("/contact/read-more-contacts-received", auth.checkLoggedIn , contact.readMoreContactsReceived);
+
+  //Read more notification
   router.get("/notification/read-more", auth.checkLoggedIn , notification.readMore);
   //Tạo router cho click đánh dấu tất cả đã đọc
   router.put("/notification/mark-all-as-read",auth.checkLoggedIn,notification.markAllAsRead);
