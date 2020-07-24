@@ -9,13 +9,15 @@ function addContact() {
       if (data.success) {
         //Tìm đến thẻ li để ẩn btn thêm và hiện btn hủy
         $("#find-user").find(`div.user-add-new-contact[data-uid = ${targetId}]`).hide();
-        $("#find-user").find(`div.user-remove-request-contact[data-uid = ${targetId}]`).css("display", "inline-block");
+        $("#find-user").find(`div.user-remove-request-contact-sent[data-uid = ${targetId}]`).css("display", "inline-block");
         increaseNumberNotifContact("count-request-contact-sent");
 
         //Hiển thị dữ liệu ra chờ xác nhận sau khi click thêm bạn bè
         //Lấy html toàn bộ thẻ li trong $find-user để dom qua thẻ ul #request-contact-sent(modal đang chờ xác nhận)
         let userInfoHtml = $("#find-user").find(`ul li[data-uid = ${targetId}]`).get(0).outerHTML; //contactModal
         $("#request-contact-sent").find("ul").prepend(userInfoHtml);
+        //Gọi sự kiện hủy yêu cầu ở modal đang chờ xác nhận
+        removeRequestContactSent();
         //Xử lý realtime
         socket.emit("add-new-contact", { contactId: targetId });
       }

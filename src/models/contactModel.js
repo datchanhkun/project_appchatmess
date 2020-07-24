@@ -51,7 +51,7 @@ ContactSchema.statics = {
   },
 
   //Hàm xóa 1 yêu cầu kết bạn
-  removeRequestContact(userId, contactId) {
+  removeRequestContactSent(userId, contactId) {
     return this.remove({
       $and: [
         { "userId": userId }, //Kiểm tra userId có trùng với userId truyền vào
