@@ -62,6 +62,19 @@ let removeRequestContactSent = (currentUserId, contactId) => {
   });
 };
 
+let removeRequestContactReceived = (currentUserId, contactId) => {
+  return new Promise(async (resolve, reject) => {
+    let removeReq = await ContactModel.removeRequestContactReceived(currentUserId, contactId);
+    // console.log(removeReq.result);
+    if (removeReq.result.n === 0) {
+      return reject(false);
+    }
+    // // Xóa thông báo trong database
+    // await NotificationModel.model.removeRequestContactReceived(currentUserId, contactId, NotificationModel.types.ADD_CONTACT);
+    resolve(true);
+  });
+};
+
 //Hàm xử lí logic lấy 10 item trong danh bạ đổ ra view để gọi qua controler
 let getContacts = (currentUserId) => {
   return new Promise(async (resolve, reject) => {
@@ -200,6 +213,7 @@ module.exports = {
   findUsersContact: findUsersContact,
   addNew: addNew,
   removeRequestContactSent: removeRequestContactSent,
+  removeRequestContactReceived: removeRequestContactReceived,
   getContacts: getContacts,
   getContactsSent: getContactsSent,
   getContactsReceived: getContactsReceived,

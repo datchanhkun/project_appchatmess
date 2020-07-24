@@ -50,12 +50,22 @@ ContactSchema.statics = {
     }).exec();
   },
 
-  //Hàm xóa 1 yêu cầu kết bạn
+  //Hàm xóa 1 yêu cầu kết bạn ở modal đang chờ xác nhận
   removeRequestContactSent(userId, contactId) {
     return this.remove({
       $and: [
         { "userId": userId }, //Kiểm tra userId có trùng với userId truyền vào
         { "contactId": contactId }
+      ]
+    }).exec();
+  },
+  //Hàm xóa 1 yêu cầu kết bạn ở modal lời mời kết bạn
+  removeRequestContactReceived(userId, contactId) {
+    return this.remove({
+      $and: [
+        //Đảo người lại contactId và userID
+        { "contactId": userId }, //Kiểm tra userId có trùng với userId truyền vào
+        { "userId": contactId }
       ]
     }).exec();
   },
