@@ -15,6 +15,9 @@ function removeRequestContactSent() {
           //Tìm đến thẻ li để ẩn btn thêm và hiện btn hủy 
           $("#find-user").find(`div.user-remove-request-contact-sent[data-uid = ${targetId}]`).hide();
           $("#find-user").find(`div.user-add-new-contact[data-uid = ${targetId}]`).css("display","inline-block");
+          //Giảm số lượng yêu cầu kết bạn ở navbar
+          decreaseNumberNotification("noti_contact_counter",1);
+          
           decreaseNumberNotifContact("count-request-contact-sent");
 
           //xoá html thẻ li khi người dùng huỷ yêu cầu kết bạn ở modal đang chờ xác nhận

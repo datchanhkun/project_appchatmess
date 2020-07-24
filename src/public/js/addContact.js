@@ -10,6 +10,9 @@ function addContact() {
         //Tìm đến thẻ li để ẩn btn thêm và hiện btn hủy
         $("#find-user").find(`div.user-add-new-contact[data-uid = ${targetId}]`).hide();
         $("#find-user").find(`div.user-remove-request-contact-sent[data-uid = ${targetId}]`).css("display", "inline-block");
+        //Đếm thông báo sau khi thêm liên lạc ở thanh navbar
+        increaseNumberNotification("noti_contact_counter",1);
+
         increaseNumberNotifContact("count-request-contact-sent");
 
         //Hiển thị dữ liệu ra chờ xác nhận sau khi click thêm bạn bè
@@ -55,7 +58,7 @@ socket.on("response-add-new-contact", function(user) {
                           <div class="user-acccept-contact-received" data-uid="${user.id}">
                               Chấp nhận
                           </div>
-                          <div class="user-reject-request-contact-received action-danger"
+                          <div class="user-remove-request-contact-received action-danger"
                               data-uid="${user.id}">
                               Xóa yêu cầu
                           </div>
@@ -63,4 +66,5 @@ socket.on("response-add-new-contact", function(user) {
                     </li>`;
   //Tiến hành dom dữ liệu html vào modal yêu cầu kết bạn
   $("#request-contact-received").find("ul").prepend(userInfoHtml);
+  removeRequestContactReceived();//js/removeRequestContactReceived.js
 });
