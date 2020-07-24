@@ -1,5 +1,5 @@
 //io from socket.io 
-let removeRequestContact = (io) => {
+let removeRequestContactSent = (io) => {
   let clients = {};
   //io.on là sự kiện lắng nghe khi f5 web sẽ chạy
   io.on("connection",(socket) => {
@@ -11,7 +11,7 @@ let removeRequestContact = (io) => {
       clients[currentUserId] = [socket.id];
     }
     //socket.on là lắng nghe sự kiện tạo ra, data: contactId
-    socket.on("remove-request-contact", (data) => {
+    socket.on("remove-request-contact-sent", (data) => {
       // console.log(data);
       // console.log(socket.request.user);
       let currentUser = {
@@ -22,7 +22,7 @@ let removeRequestContact = (io) => {
       if(clients[data.contactId]) {
         clients[data.contactId].forEach(socketId => { //Lọc ra socketId
           //Trường hợp người nhận req đang mở 2 tab thì trả thông báo về cho 2 tab
-          io.sockets.connected[socketId].emit("response-remove-request-contact",currentUser);
+          io.sockets.connected[socketId].emit("response-remove-request-contact-sent",currentUser);
         });
       }
 
@@ -42,4 +42,4 @@ let removeRequestContact = (io) => {
   });
 }
 
-module.exports = removeRequestContact;
+module.exports = removeRequestContactSent;

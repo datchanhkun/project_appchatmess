@@ -61,7 +61,7 @@ let initRouters = (app) => {
   //Add contact
   router.post("/contact/add-new", auth.checkLoggedIn, contact.addNew);
   //Delete contact
-  router.delete("/contact/remove-request-contact", auth.checkLoggedIn , contact.removeRequestContact);
+  router.delete("/contact/remove-request-contact-sent", auth.checkLoggedIn , contact.removeRequestContactSent);
 
   //Read more contacts danh bạ
   router.get("/contact/read-more-contacts", auth.checkLoggedIn , contact.readMoreContacts);
