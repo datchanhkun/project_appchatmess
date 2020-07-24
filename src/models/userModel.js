@@ -71,6 +71,10 @@ UserSchema.statics = {
         ]}
       ]
     },{_id: 1, username: 1, address: 1, avatar: 1}).exec(); //cho phép lấy ra những field trong DB ra
+  },
+  //Hàm lấy những trường cần thiết để view ra tìm kiếm theo id
+  getNormalUserDataById(id) {
+    return this.findById(id, {_id: 1, username: 1, address: 1, avatar: 1}).exec();
   }
 };
 

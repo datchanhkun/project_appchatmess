@@ -123,7 +123,41 @@ ContactSchema.statics = {
         { "status": false }
       ]
     }).exec();//{"createAt": -1} sắp xếp những ai mới add vào lên đầu
-  }
+  },
+  //Hàm read more contact trong modal danh bạ
+  readMoreContacts(userId, skip, limit) {
+    return this.find({
+      $and: [
+        {
+          $or: [
+            { "userId": userId },
+            { "contactId": userId }
+          ]
+        },
+        { "status": true }
+      ]
+    }).sort({ "createAt": -1 }).skip(skip).limit(limit).exec();//{"createAt": -1} sắp xếp những ai mới add vào lên đầu
+  },
+  //Hàm read more contact trong modal đang chờ xác nhận
+  readMoreContactsSent(userId, skip, limit) {
+    return this.find({
+      $and: [
+        { "userId": userId },
+        { "status": false }
+      ]
+    }).sort({ "createAt": -1 }).skip(skip).limit(limit).exec();//{"createAt": -1} sắp xếp những ai mới add vào lên đầu
+  },
+  //Hàm read more contact trong modal yêu cầu kết bạn
+  readMoreContactsReceived(userId, skip, limit) {
+    return this.find({
+      $and: [
+        { "contactId": userId },
+        { "status": false }
+      ]
+    }).sort({ "createAt": -1 }).skip(skip).limit(limit).exec();//{"createAt": -1} sắp xếp những ai mới add vào lên đầu
+  },
+
+
 };
 
 module.exports = mongoose.model("contact", ContactSchema);
