@@ -1283,7 +1283,10 @@ label:focus,
   float: right;
   margin-right: 20px;
 }
-.read-more-notif {
+.read-more-notif ,
+.read-more-contacts,
+.read-more-contacts-sent,
+.read-more-contacts-received{
   text-align: center;
 }
 /* SPIN LOADING  */

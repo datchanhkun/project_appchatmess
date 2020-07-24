@@ -61,7 +61,7 @@ UserSchema.statics = {
         //"nin: viet tat cua not in"
         //Lọc ra những id không nằm trong mảng deprecatedUserIds
         {"_id": {$nin : deprecatedUserIds}},
-        {"local.isActive": false},
+        {"local.isActive": true},
         {$or: [
           //Tìm những user có username gần giống với keyword mà người dùng nhập vào theo $regex
           {"username" : {"$regex": new RegExp(keyword, "i") }},

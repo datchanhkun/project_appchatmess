@@ -11,6 +11,11 @@ function addContact() {
         $("#find-user").find(`div.user-add-new-contact[data-uid = ${targetId}]`).hide();
         $("#find-user").find(`div.user-remove-request-contact[data-uid = ${targetId}]`).css("display", "inline-block");
         increaseNumberNotifContact("count-request-contact-sent");
+
+        //Hiển thị dữ liệu ra chờ xác nhận sau khi click thêm bạn bè
+        //Lấy html toàn bộ thẻ li trong $find-user để dom qua thẻ ul #request-contact-sent(modal đang chờ xác nhận)
+        let userInfoHtml = $("#find-user").find(`ul li[data-uid = ${targetId}]`).get(0).outerHTML; //contactModal
+        $("#request-contact-sent").find("ul").prepend(userInfoHtml);
         //Xử lý realtime
         socket.emit("add-new-contact", { contactId: targetId });
       }
@@ -30,4 +35,30 @@ socket.on("response-add-new-contact", function(user) {
 
   increaseNumberNotification("noti_contact_counter",1);
   increaseNumberNotification("noti_counter",1);
+//Lấy html toàn bộ thẻ li trong $find-user để dom qua thẻ ul #request-contact-received(modal yêu cầu kết bạn)
+  let userInfoHtml = `<li class="_contactList" data-uid="${user.id}">
+                      <div class="contactPanel">
+                          <div class="user-avatar">
+                              <img src="images/users/${user.avatar}" alt="">
+                          </div>
+                          <div class="user-name">
+                              <p>
+                              ${user.username}
+                              </p>
+                          </div>
+                          <br>
+                          <div class="user-address">
+                              <span>${user.address}</span>
+                          </div>
+                          <div class="user-acccept-contact-received" data-uid="${user.id}">
+                              Chấp nhận
+                          </div>
+                          <div class="user-reject-request-contact-received action-danger"
+                              data-uid="${user.id}">
+                              Xóa yêu cầu
+                          </div>
+                      </div>
+                    </li>`;
+  //Tiến hành dom dữ liệu html vào modal yêu cầu kết bạn
+  $("#request-contact-received").find("ul").prepend(userInfoHtml);
 });
