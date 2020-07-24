@@ -17,7 +17,9 @@ let addNewContact = (io) => {
       let currentUser = {
         id: socket.request.user._id,
         username: socket.request.user.username,
-        avatar: socket.request.user.avatar
+        avatar: socket.request.user.avatar,
+        //vì khi đăng nhập không yêu cầu phải nhập địa chỉ nên phải dùng toán tử 3 ngôi để kiểm tra
+        address: (socket.request.user.address != null) ? socket.request.user.address != null : ""
       };
 
       //Tiến hành emit thông báo cho 1 contactId

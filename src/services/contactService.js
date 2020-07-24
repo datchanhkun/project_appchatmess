@@ -7,10 +7,11 @@ import UserModel from "./../models/userModel";
 import NotificationModel from "./../models/notificationModel";
 import _ from "lodash";
 import { contact } from ".";
+const LIMIT_NUMBER = 10;
 let findUsersContact = (currentUserId,keyword) => {
   return new Promise(async(resolve, reject) => {
-    let deprecatedUserIds = [currentUserId];
-    let contactsByUser = await ContactModel.findAllByUser(currentUserId);
+    let deprecatedUserIds = [currentUserId];//Những id không dungf nữa
+    let contactsByUser = await ContactModel.findAllByUser(currentUserId); 
     contactsByUser.forEach((contact) => {
       deprecatedUserIds.push(contact.userId);
       deprecatedUserIds.push(contact.contactId);
@@ -60,8 +61,96 @@ let removeRequestContact = (currentUserId,contactId) => {
     resolve(true);
   });
 }
+
+//Hàm xử lí logic lấy 10 item trong danh bạ đổ ra view để gọi qua controler
+let getContacts = (currentUserId) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      let contacts = await ContactModel.getContacts(currentUserId,LIMIT_NUMBER );
+      
+      let users = contacts.map(async(contact) => {
+        //Kiểm tra contactId == với user đang đăng nhập, so sánh String == object
+        if(contact.contactId == currentUserId) {
+          return await UserModel.findUserById(contact.userId);
+        } else {
+          return await UserModel.findUserById(contact.contactId);
+        }
+      });
+      resolve(await Promise.all(users));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+let getContactsSent = (currentUserId) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      let contacts = await ContactModel.getContactsSent(currentUserId,LIMIT_NUMBER );
+      
+      let users = contacts.map(async(contact) => {
+        return await UserModel.findUserById(contact.contactId);
+      });
+      resolve(await Promise.all(users));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+let getContactsReceived = (currentUserId) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      let contacts = await ContactModel.getContactsReceived(currentUserId,LIMIT_NUMBER );
+      
+      let users = contacts.map(async(contact) => {
+        return await UserModel.findUserById(contact.userId);
+      });
+      resolve(await Promise.all(users));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+//Hàm đếm item chưa load để gọi sang bên controller
+let countAllContacts = (currentUserId) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      let count = await ContactModel.countAllContacts(currentUserId);
+      resolve(count);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+let countAllContactsSent = (currentUserId) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      let count = await ContactModel.countAllContactsSent(currentUserId);
+      resolve(count);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+let countAllContactsReceived = (currentUserId) => {
+  return new Promise(async(resolve, reject) => {
+    try {
+      let count = await ContactModel.countAllContactsReceived(currentUserId);
+      resolve(count);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 module.exports = {
   findUsersContact : findUsersContact,
   addNew : addNew,
-  removeRequestContact : removeRequestContact
+  removeRequestContact : removeRequestContact,
+  getContacts: getContacts,
+  getContactsSent: getContactsSent,
+  getContactsReceived: getContactsReceived,
+  countAllContacts: countAllContacts,
+  countAllContactsSent: countAllContactsSent,
+  countAllContactsReceived: countAllContactsReceived
 };
