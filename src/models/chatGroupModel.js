@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 
 let ChatGroupSchema = new Schema({
   name: String,
-  userAmount: {tyoe: Number, min: 3, max: 50},
+  userAmount: {type: Number, min: 3, max: 50},
   messageAmount: {type: Number, default: 0},
   userId: String,
   members: [
@@ -15,4 +15,13 @@ let ChatGroupSchema = new Schema({
   deleteAt: {type: Number, default: null}
 });
 
+ChatGroupSchema.statics = {
+  //Lấy tất cả chat group hiện có của 1 user
+  getChatGroups(userId, limit) {
+    return this.find({
+      //Sử dụng elemMatch của mongoose nếu userId có tồn tại trong mảng thì lấy cả members
+      "members": {$elemMatch: {"userId": userId}}
+    }).sort({"createAt": -1}).limit(limit).exec();
+  }
+};
 module.exports = mongoose.model("chatGroup", ChatGroupSchema);
