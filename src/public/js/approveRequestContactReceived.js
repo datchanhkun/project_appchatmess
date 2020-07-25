@@ -38,6 +38,8 @@ function approveRequestContactReceived() {
           increaseNumberNotifContact("count-contacts");
           //Giảm số lượng ở quản lý yêu cầu trên thanh navbar
           decreaseNumberNotification("noti_contact_counter", 1);
+          //Xóa liên hệ
+          removeContact();
           //Xử lý realtime
           socket.emit("approve-request-contact-received", { contactId: targetId });
         }
@@ -93,8 +95,10 @@ socket.on("response-approve-request-contact-received", function (user) {
                           </div>
                       </li>`;
   $("#contacts").find("ul").prepend(userInfoHtml);
+  removeContact();
 });
 
 $(document).ready(function () {
   approveRequestContactReceived();
 })
+

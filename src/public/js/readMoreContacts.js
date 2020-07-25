@@ -36,7 +36,8 @@ $(document).ready(function() {
                 </div>
             </div>
         </li>`);
-    })
+    });
+    removeContact();
     });
   });
 });
