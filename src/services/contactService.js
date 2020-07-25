@@ -74,6 +74,25 @@ let removeRequestContactReceived = (currentUserId, contactId) => {
     resolve(true);
   });
 };
+let approveRequestContactReceived = (currentUserId, contactId) => {
+  return new Promise(async (resolve, reject) => {
+    let approveReq = await ContactModel.approveRequestContactReceived(currentUserId, contactId);
+    // console.log(removeReq.result);
+    //nModified: chỉnh sửa
+    // console.log(approveReq);
+    if (approveReq.nModified === 0) {
+      return reject(false);
+    }
+    //Tạo thông báo trong database
+    let notificationItem = {
+      senderId: currentUserId,
+      receiverId: contactId,
+      type: NotificationModel.types.APPROVE_CONTACT,
+    };
+    await NotificationModel.model.createNew(notificationItem);
+    resolve(true);
+  });
+};
 
 //Hàm xử lí logic lấy 10 item trong danh bạ đổ ra view để gọi qua controler
 let getContacts = (currentUserId) => {
@@ -214,6 +233,7 @@ module.exports = {
   addNew: addNew,
   removeRequestContactSent: removeRequestContactSent,
   removeRequestContactReceived: removeRequestContactReceived,
+  approveRequestContactReceived: approveRequestContactReceived,
   getContacts: getContacts,
   getContactsSent: getContactsSent,
   getContactsReceived: getContactsReceived,
