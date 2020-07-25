@@ -49,7 +49,29 @@ ContactSchema.statics = {
       ]
     }).exec();
   },
-
+  //Hàm xóa liên hệ
+  removeContact(userId, contactId) {
+    return this.remove({
+      $or: [
+        //Kiểm tra chéo
+        //Trường hợp A gửi lời mời kb cho B rồi nên kiểm tra chéo để B không gửi được lời mời KB cho A
+        {
+          $and: [
+            { "userId": userId }, //Kiểm tra userId có trùng với userId truyền vào
+            { "contactId": contactId },
+            {"status": true} //Đã là bạn bè rồi mới được xóa
+          ]
+        },
+        {
+          $and: [
+            { "userId": contactId },
+            { "contactId": userId }, //Kiểm tra userId có trùng với userId truyền vào
+            {"status": true} //Đã là bạn bè rồi mới được xóa
+          ]
+        }
+      ]
+    }).exec();
+  },
   //Hàm xóa 1 yêu cầu kết bạn ở modal đang chờ xác nhận
   removeRequestContactSent(userId, contactId) {
     return this.remove({

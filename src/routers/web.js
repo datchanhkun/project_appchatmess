@@ -60,6 +60,9 @@ let initRouters = (app) => {
   router.get("/contact/find-users/:keyword",auth.checkLoggedIn,contactValid.findUsersContact,contact.findUsersContact);
   //Add contact
   router.post("/contact/add-new", auth.checkLoggedIn, contact.addNew);
+  //Remove contact
+  router.delete("/contact/remove-contact", auth.checkLoggedIn, contact.removeContact);
+  
   //Delete contact
   router.delete("/contact/remove-request-contact-sent", auth.checkLoggedIn , contact.removeRequestContactSent);
   //Xóa yêu cầu kết bạn
