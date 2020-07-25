@@ -3,8 +3,10 @@ import ContactModel from "./../models/contactModel";
 import UserModel from "./../models/userModel";
 import ChatGroupModel from "./../models/chatGroupModel";
 import _, { isEmpty } from "lodash";
+import MessageModel from "./../models/messageModel";
 
 const LIMIT_CONVERSATIONS = 15;
+const LIMIT_MESSAGE = 30;
 let getAllConversationItems = (currentUserId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -34,10 +36,27 @@ let getAllConversationItems = (currentUserId) => {
       allConversations = _.sortBy(allConversations, (item) => {
         return -item.updateAt; // Sắp xếp từ lớn đến nhỏ theo timestamp của updateAt
       });
+
+      //Lấy ra message của từng cuộc hội thoại
+      let allConversationWithMessagesPromise = allConversations.map(async(conversation) => {
+        let getMessages = await MessageModel.model.getMessages(currentUserId,conversation._id,LIMIT_MESSAGE);
+        //Gán conversation.messages = với mảng dữ liệu getMessages
+        conversation = conversation.toObject(); // convert thành object
+        conversation.messages = getMessages;
+        return conversation;
+      });
+
+      let allConversationWithMessages = await Promise.all(allConversationWithMessagesPromise);
+      //Sắp xếp lại message theo thời gian 
+      allConversationWithMessages = _.sortBy(allConversationWithMessages, (item) => {
+        return -item.updateAt;// Sắp xếp từ lớn đến nhỏ theo timestamp của updateAt
+      });
+      
       resolve({
         userConversations: userConversations,
         groupConversations: groupConversations,
-        allConversations: allConversations
+        allConversations: allConversations,
+        allConversationWithMessages: allConversationWithMessages
       });
 
     } catch (error) {

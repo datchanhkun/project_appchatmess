@@ -151,6 +151,17 @@ function changeTypeChat() {
     }
   });
 }
+
+//Bắt sự kiện click user chat để hiển thị nội dung
+function changeScreenChat() {
+  $(".room-chat").unbind("click").on("click", function() {
+    //Remove thẻ li thành màu trắng
+      $(".person").removeClass("active");
+      //khi click vào thì màu xám gọi đến active
+      $(this).find("li").addClass("active");
+      $(this).tab("show");
+  });
+}
 $(document).ready(function() {
   // Hide số thông báo trên đầu icon mở modal contact
   showModalContacts();
@@ -184,4 +195,10 @@ $(document).ready(function() {
 
   //Thay đổi kiểu trò chuyện
   changeTypeChat();
+
+  //Bắt sự kiện click user chat để hiển thị nội dung
+  changeScreenChat();
+
+  //Click sẵn vào phần tử đầu tiên của cuộc trò chuyện khi load trang web
+  $("ul.people").find("li")[0].click();
 });
