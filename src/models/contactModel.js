@@ -55,7 +55,8 @@ ContactSchema.statics = {
     return this.remove({
       $and: [
         { "userId": userId }, //Kiểm tra userId có trùng với userId truyền vào
-        { "contactId": contactId }
+        { "contactId": contactId },
+        { "status": false} 
       ]
     }).exec();
   },
@@ -65,9 +66,21 @@ ContactSchema.statics = {
       $and: [
         //Đảo người lại contactId và userID
         { "contactId": userId }, //Kiểm tra userId có trùng với userId truyền vào
-        { "userId": contactId }
+        { "userId": contactId },
+        { "status": false} 
       ]
     }).exec();
+  },
+  //Hàm chấp nhận yêu cầu kết bạn và thêm vào danh bạ
+  approveRequestContactReceived(userId, contactId) {
+    return this.update({
+      $and: [
+        //Đảo người lại contactId và userID
+        { "contactId": userId }, //Kiểm tra userId có trùng với userId truyền vào
+        { "userId": contactId },
+        { "status": false} //chưa là bạn bè mới cập nhật
+      ]
+    }, {"status": true}).exec();
   },
   //Hàm lấy danh sách user để xuất ra modal danh bạ và gọi ra cho contactService
   getContacts(userId, limit) {

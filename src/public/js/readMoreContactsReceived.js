@@ -28,7 +28,7 @@ $(document).ready(function() {
               <div class="user-address">
                 <span>${(user.address !== null ? user.address : "")}</span>
               </div>
-              <div class="user-acccept-contact-received" data-uid="${user._id}">
+              <div class="user-approve-request-contact-received" data-uid="${user._id}">
                   Chấp nhận
               </div>
               <div class="user-remove-request-contact-received action-danger"
@@ -39,6 +39,7 @@ $(document).ready(function() {
       </li>`);
     });
     removeRequestContactReceived();//js/removeRequestContactReceived.js
+    approveRequestContactReceived();
     });
   });
 });

@@ -64,6 +64,8 @@ let initRouters = (app) => {
   router.delete("/contact/remove-request-contact-sent", auth.checkLoggedIn , contact.removeRequestContactSent);
   //Xóa yêu cầu kết bạn
   router.delete("/contact/remove-request-contact-received", auth.checkLoggedIn , contact.removeRequestContactReceived);
+  //Thêm user vào danh bạ khi đồng ý kết bạn
+  router.put("/contact/approve-request-contact-received", auth.checkLoggedIn , contact.approveRequestContactReceived);
 
   //Read more contacts danh bạ
   router.get("/contact/read-more-contacts", auth.checkLoggedIn , contact.readMoreContacts);
