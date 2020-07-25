@@ -50,7 +50,7 @@ let updateAvatar = (req, res) => {
       let userUpdate = await user.updateUser(req.user._id, updateUserItem);
       //Sau khi update thành công thì xóa img avatar cũ đi
       //Sử dụng fs-extra thay vì fs.unlink vì fs chỉ hỗ trợ callback và promise
-      await fsExtra.remove(`${app.avatar_directory}/${userUpdate.avatar}`);
+      // await fsExtra.remove(`${app.avatar_directory}/${userUpdate.avatar}`);
 
       let result = {
         message: transSuccess.user_info_updated,

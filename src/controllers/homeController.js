@@ -1,5 +1,5 @@
 import {notification,contact, message} from "./../services/index";
- 
+import {bufferToBase64} from "./../helpers/clientHelper";
 let getHome = async(req, res) => {
   //Chỉ hiển thị 10 thông báo
   let notifications = await notification.getNotifications(req.user._id);
@@ -23,6 +23,8 @@ let getHome = async(req, res) => {
   let allConversations = getAllConversationItems.allConversations;
   let userConversations = getAllConversationItems.userConversations;
   let groupConversations = getAllConversationItems.groupConversations;
+  //Tất cả tin nhắn với toàn bộ cuộc trò chuyện
+  let allConversationWithMessages = getAllConversationItems.allConversationWithMessages;
   //Return ra view
   return res.render("main/home/home" , {
     errors: req.flash("errors"),
@@ -38,7 +40,9 @@ let getHome = async(req, res) => {
     countAllContactsReceived: countAllContactsReceived,
     allConversations: allConversations,
     userConversations: userConversations,
-    groupConversations: groupConversations
+    groupConversations: groupConversations,
+    allConversationWithMessages: allConversationWithMessages,
+    bufferToBase64: bufferToBase64
   });
 };
 
