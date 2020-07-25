@@ -14,13 +14,13 @@ let getAllConversationItems = (currentUserId) => {
         //Kiểm tra contactId == với user đang đăng nhập, so sánh String == object
         if (contact.contactId == currentUserId) {
           let getUserContact = await UserModel.getNormalUserDataById(contact.userId);
-          //Thêm field createAt cho user để đổ ra view
-          getUserContact.createAt = contact.createAt;
+          //Thêm field updateAt cho user để đổ ra view
+          getUserContact.createAt = contact.updateAt;
           return getUserContact;
         } else {
           let getUserContact = await UserModel.getNormalUserDataById(contact.contactId);
-          //Thêm field createAt cho user để đổ ra view
-          getUserContact.createAt = contact.createAt;
+          //Thêm field updateAt cho user để đổ ra view
+          getUserContact.updateAt = contact.updateAt;
           return getUserContact;
         }
       });
@@ -32,7 +32,7 @@ let getAllConversationItems = (currentUserId) => {
       let allConversations = userConversations.concat(groupConversations);
       
       allConversations = _.sortBy(allConversations, (item) => {
-        return -item.createAt; // Sắp xếp từ lớn đến nhỏ theo timestamp của createAt
+        return -item.updateAt; // Sắp xếp từ lớn đến nhỏ theo timestamp của updateAt
       });
       resolve({
         userConversations: userConversations,
