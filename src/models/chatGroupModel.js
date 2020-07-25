@@ -11,7 +11,7 @@ let ChatGroupSchema = new Schema({
     {userId: String}
   ],
   createAt: {type: Number, default: Date.now},
-  updateAt: {type: Number, default: null},
+  updateAt: {type: Number, default: Date.now},
   deleteAt: {type: Number, default: null}
 });
 
@@ -21,7 +21,7 @@ ChatGroupSchema.statics = {
     return this.find({
       //Sử dụng elemMatch của mongoose nếu userId có tồn tại trong mảng thì lấy cả members
       "members": {$elemMatch: {"userId": userId}}
-    }).sort({"createAt": -1}).limit(limit).exec();
+    }).sort({"updateAt": -1}).limit(limit).exec();
   }
 };
 module.exports = mongoose.model("chatGroup", ChatGroupSchema);

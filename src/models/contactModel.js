@@ -102,7 +102,10 @@ ContactSchema.statics = {
         { "userId": contactId },
         { "status": false} //chưa là bạn bè mới cập nhật
       ]
-    }, {"status": true}).exec();
+    }, {
+      "status": true,
+      "updateAt": Date.now()
+    }).exec();
   },
   //Hàm lấy danh sách user để xuất ra modal danh bạ và gọi ra cho contactService
   getContacts(userId, limit) {
@@ -116,7 +119,7 @@ ContactSchema.statics = {
         },
         { "status": true }
       ]
-    }).sort({ "createAt": -1 }).limit(limit).exec();//{"createAt": -1} sắp xếp những ai mới add vào lên đầu
+    }).sort({ "updateAt": -1 }).limit(limit).exec();//{"updateAt": -1} sắp xếp những ai mới add vào lên đầu
   },
   //Hàm lấy danh sách user để xuất ra modal Đang chờ xác nhận và gọi ra cho contactService
   getContactsSent(userId, limit) {
@@ -181,7 +184,7 @@ ContactSchema.statics = {
         },
         { "status": true }
       ]
-    }).sort({ "createAt": -1 }).skip(skip).limit(limit).exec();//{"createAt": -1} sắp xếp những ai mới add vào lên đầu
+    }).sort({ "updateAt": -1 }).skip(skip).limit(limit).exec();//{"updateAt": -1} sắp xếp những ai mới add vào lên đầu
   },
   //Hàm read more contact trong modal đang chờ xác nhận
   readMoreContactsSent(userId, skip, limit) {
