@@ -39,10 +39,18 @@ let getAllConversationItems = (currentUserId) => {
 
       //Lấy ra message của từng cuộc hội thoại
       let allConversationWithMessagesPromise = allConversations.map(async(conversation) => {
-        let getMessages = await MessageModel.model.getMessages(currentUserId,conversation._id,LIMIT_MESSAGE);
-        //Gán conversation.messages = với mảng dữ liệu getMessages
         conversation = conversation.toObject(); // convert thành object
-        conversation.messages = getMessages;
+        //Nếu là nhóm trò chuyện
+        if(conversation.members) {
+          let getMessages = await MessageModel.model.getMessagesInGroup(conversation._id,LIMIT_MESSAGE);
+          //Gán conversation.messages = với mảng dữ liệu getMessages
+          conversation.messages = getMessages;
+        } else {
+          let getMessages = await MessageModel.model.getMessages(currentUserId,conversation._id,LIMIT_MESSAGE);
+          //Gán conversation.messages = với mảng dữ liệu getMessages
+          conversation.messages = getMessages;
+        }
+
         return conversation;
       });
 

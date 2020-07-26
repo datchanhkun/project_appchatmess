@@ -31,14 +31,14 @@
                         <!-- user lấy từ homecontroller -->
                         <div class="bubble <% if(message.senderId == user._id) { %> me <% } else { %>you<% } %>"
                             data-mess-id="<%= message._id%>">
-                            <img src="/images/users/<%= message.sender.avatar %>" class="avatar-small">
+                            <img src="/images/users/<%= message.sender.avatar %>" class="avatar-small" title="<%= message.sender.name %>">
                             <%= message.text %>
                         </div>
                         <% } %>
                         <% if(message.messageType === "image") { %>
                         <div class="bubble <% if(message.senderId == user._id) { %> me <% } else { %>you<% } %> bubble-image-file"
                             data-mess-id="<%= message._id%>">
-                            <img src="/images/users/<%= message.sender.avatar %>" class="avatar-small">
+                            <img src="/images/users/<%= message.sender.avatar %>" class="avatar-small" title="<%= message.sender.name %>">
                             <img src="data:<%= message.file.contentType %>; base64,<%= bufferToBase64(message.file.data) %>"
                                 class="show-image-chat">
                         </div>
@@ -46,7 +46,7 @@
                         <% if(message.messageType === "file") { %>
                         <div class="bubble <% if(message.senderId == user._id) { %> me <% } else { %>you<% } %> bubble-image-file"
                             data-mess-id="<%= message._id%>">
-                            <img src="/images/users/<%= message.sender.avatar %>" class="avatar-small">
+                            <img src="/images/users/<%= message.sender.avatar %>" class="avatar-small" title="<%= message.sender.name %>">
                             <a href="data:<%= message.file.contentType %>; base64,<%= bufferToBase64(message.file.data) %>"
                                 download="<%= message.file.fileName %>">
                                 <%= message.file.fileName %>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="write" data-chat="<%= conversation._id %>">
-                    <input type="text" class="write-chat" data-chat="<%= conversation._id %>">
+                    <input type="text" class="write-chat chat-in-group" id="write-chat-<%= conversation._id %>" data-chat="<%= conversation._id %>">
                     <div class="icons">
                         <a href="#" class="icon-chat" data-chat="<%= conversation._id %>"><i class="fa fa-smile-o"></i></a>
                         <label for="image-chat">
@@ -132,7 +132,7 @@
                     </div>
                 </div>
                 <div class="write" data-chat="<%= conversation._id %>">
-                    <input type="text" class="write-chat" data-chat="<%= conversation._id %>">
+                    <input type="text" class="write-chat" id="write-chat-<%= conversation._id %>" data-chat="<%= conversation._id %>">
                     <div class="icons">
                         <a href="#" class="icon-chat" data-chat="<%= conversation._id %>"><i class="fa fa-smile-o"></i></a>
                         <label for="image-chat">
