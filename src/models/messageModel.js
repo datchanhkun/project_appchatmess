@@ -9,12 +9,12 @@ let MessageSchema = new Schema({
   messageType: String,
   sender: {
     id: String,
-    username: String,
+    name: String,
     avatar: String
   },
   receiver: {
     id: String,
-    username: String,
+    name: String,
     avatar: String
   },
   text: String,
@@ -26,6 +26,7 @@ let MessageSchema = new Schema({
 
 MessageSchema.statics = {
   //SenderId: currentUserId
+  //Lấy tin nhắn ra view giữa 2 user đã là bạn bè với nhau
   getMessages(senderId,receiverId,limit) {
     return this.find({
       $or: [
@@ -39,7 +40,12 @@ MessageSchema.statics = {
         ]}
       ]
     }).sort({"createAt": 1}).limit(limit).exec();
-  } 
+  },
+  //Hàm lấy tin nhắn ra cho tất cả các user trong cuộc trò chuyện nhóm
+  //receiverId: là id của 1 group chat
+  getMessagesInGroup(receiverId,limit) {
+    return this.find({"receiverId": receiverId}).sort({"createAt": 1}).limit(limit).exec();
+  }
 };
 
 const MESSAGE_CONVERSATION_TYPES = {
