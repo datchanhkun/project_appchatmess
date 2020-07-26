@@ -71,7 +71,7 @@
                             <span class="preview">
                                 <!-- Lấy ra phần tử cuối cùng của mảng để preview tin nhắn mới nhất lên -->
                                 <% if(lastItemOfArray(conversation.messages).messageType === "text") { %> 
-                                    <%= astItemOfArray(conversation.messages).text %>
+                                    <%= lastItemOfArray(conversation.messages).text %>
                                 <% } %>
 
                                 <% if(lastItemOfArray(conversation.messages).messageType === "image") { %> 
@@ -120,7 +120,7 @@
                                     <span class="preview">
                                         <!-- Lấy ra phần tử cuối cùng của mảng để preview tin nhắn mới nhất lên -->
                                         <% if(lastItemOfArray(conversation.messages).messageType === "text") { %> 
-                                            <%= astItemOfArray(conversation.messages).text %>
+                                            <%= lastItemOfArray(conversation.messages).text %>
                                         <% } %>
         
                                         <% if(lastItemOfArray(conversation.messages).messageType === "image") { %> 

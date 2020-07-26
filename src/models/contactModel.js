@@ -205,6 +205,33 @@ ContactSchema.statics = {
     }).sort({ "createAt": -1 }).skip(skip).limit(limit).exec();//{"createAt": -1} sắp xếp những ai mới add vào lên đầu
   },
 
+  /**
+   * Update contact lên đầu 
+   * @param {String} userId 
+   * @param {String} contactId 
+   */
+  updateWhenHasNewMessage(userId,contactId) {
+    return this.update({
+      $or: [
+        //Kiểm tra chéo
+        //Trường hợp A gửi lời mời kb cho B rồi nên kiểm tra chéo để B không gửi được lời mời KB cho A
+        {
+          $and: [
+            { "userId": userId }, //Kiểm tra userId có trùng với userId truyền vào
+            { "contactId": contactId }
+          ]
+        },
+        {
+          $and: [
+            { "userId": contactId },
+            { "contactId": userId } //Kiểm tra userId có trùng với userId truyền vào
+          ]
+        }
+      ]
+    },{
+      "updateAt": Date.now()
+    }).exec();
+  }
 
 };
 

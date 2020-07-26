@@ -1,4 +1,4 @@
-const { message } = require("../../services");
+
 
 function textAndEmojiChat(divId) {
   //Bắt sự kiện gõ phím của emoji
@@ -24,10 +24,12 @@ function textAndEmojiChat(divId) {
       // Gửi tin nhắn lên server
       $.post("/message/add-new-text-emoji", dataTextEmojiForSend, function(data) {
         //Success
-
+        console.log(data.message);
 
       }).fail(function (response) {
         //errors
+        // console.log(response);
+        alertify.notify(response.responseText, "error",7);
       });
       console.log(targetId);
       console.log(messageValue);

@@ -34,11 +34,12 @@ function enableEmojioneArea(divId) {
     hidePickerOnBlur: true,
     search: false,
     shortnames: false,
-    //mỗi khi gõ 1 dữ liệu bất kỳ vào div emoij thì keyup sẽ lấy dữ liệu đó gán với input gốc
     events: {
+      //mỗi khi gõ 1 dữ liệu bất kỳ vào div emoij thì keyup sẽ lấy dữ liệu đó gán với input gốc
       keyup: function(editor, event) {
         $(`#write-chat-${divId}`).val(this.getText());
       },
+      //Bật lắng nghe DOM cho việc chat tin nhắn văn bản + emoji
       click: function() {
         textAndEmojiChat(divId);
       }
@@ -164,7 +165,7 @@ function changeTypeChat() {
   });
 }
 
-//Bắt sự kiện click user chat để hiển thị nội dung
+//Bắt sự kiện click user chat để hiển thị nội dung, truy xuất vào thẻ a
 function changeScreenChat() {
   $(".room-chat").unbind("click").on("click", function() {
     //Remove thẻ li thành màu trắng
@@ -216,5 +217,5 @@ $(document).ready(function() {
   changeScreenChat();
 
   //Click sẵn vào phần tử đầu tiên của cuộc trò chuyện khi load trang web
-  $("ul.people").find("li")[0].click();
+  $("ul.people").find("a")[0].click();
 });

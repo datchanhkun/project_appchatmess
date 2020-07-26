@@ -25,6 +25,9 @@ let MessageSchema = new Schema({
 });
 
 MessageSchema.statics = {
+  createNew(item) {
+    return this.create(item);
+  },
   //SenderId: currentUserId
   //Lấy tin nhắn ra view giữa 2 user đã là bạn bè với nhau
   getMessages(senderId,receiverId,limit) {
