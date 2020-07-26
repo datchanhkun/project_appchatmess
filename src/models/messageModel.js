@@ -42,12 +42,12 @@ MessageSchema.statics = {
           {"senderId": receiverId}
         ]}
       ]
-    }).sort({"createAt": 1}).limit(limit).exec();
+    }).sort({"createAt": -1}).limit(limit).exec();
   },
   //Hàm lấy tin nhắn ra cho tất cả các user trong cuộc trò chuyện nhóm
   //receiverId: là id của 1 group chat
   getMessagesInGroup(receiverId,limit) {
-    return this.find({"receiverId": receiverId}).sort({"createAt": 1}).limit(limit).exec();
+    return this.find({"receiverId": receiverId}).sort({"createAt": -1}).limit(limit).exec();
   }
 };
 
