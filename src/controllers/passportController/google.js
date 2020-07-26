@@ -1,6 +1,7 @@
 import passport from "passport";
 import passportGoogle from "passport-google-oauth20";
 import UserModel from "./../../models/userModel";
+import ChatGroupModel from "./../../models/chatGroupModel";
 import {transErrors} from "./../../../lang/vi";
 import {transSuccess} from "./../../../lang/vi";
 
@@ -53,14 +54,23 @@ let initPassportGoogle = () => {
   });
 
   //Lay user tu session ra ngoai
-  passport.deserializeUser((id,done) => {
-    UserModel.findUserByIdForSessionToUse(id)
-    .then(user => {
+  passport.deserializeUser(async(id,done) => {
+    try {
+      let user = await UserModel.findUserByIdForSessionToUse(id);
+      let getChatGroupIds = await ChatGroupModel.getChatGroupIdsByUser(user._id);
+      user = user.toObject();
+      user.chatGroupIds = getChatGroupIds;
       return done(null,user);
-    })
-    .catch(error => {
+    } catch (error) {
       return done(error,null);
-    })
+    }
+    // UserModel.findUserByIdForSessionToUse(id)
+    // .then(user => {
+    //   return done(null,user);
+    // })
+    // .catch(error => {
+    //   return done(error,null);
+    // })
   });
 };
 

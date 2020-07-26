@@ -24,57 +24,45 @@ function textAndEmojiChat(divId) {
 
       // Gửi tin nhắn lên server
       $.post("/message/add-new-text-emoji", dataTextEmojiForSend, function (data) {
+        let dataToEmit = {
+          message: data.message
+        };
         //Success
         // console.log(data.message);
         //Xử lý dữ liệu trước khi hiển thị
         let messageOfMe = $(`<div class="bubble me data-mess-id="${data.message._id}"></div>`);
+        messageOfMe.text(data.message.text);
         if (dataTextEmojiForSend.isChatGroup) {
-          messageOfMe.html(`<img src="/images/users/${data.message.sender.avatar}" class="avatar-small" title="${data.message.sender.name}">`);
-
-          messageOfMe.text(data.message.text);
+          let senderAvatar = `<img src="/images/users/${data.message.sender.avatar}" class="avatar-small" title="${data.message.sender.name}" />`;
+          messageOfMe.html(`${senderAvatar}`);
           //Cập nhật lại số tin nhắn
           increaseNumberMessageGroup(divId);
-          //Append dữ liệu vào màn hình 
-          $(`.right .chat[data-chat=${divId}]`).append(messageOfMe);
-          //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
-          nineScrollRight(divId);
-          //Xóa đi dữ liệu đã nhập vào trong thẻ input
-          $(`#write-chat-${divId}`).val("");
-          currentEmojoneArea.find(".emojionearea-editor").text("");
-          //Hiển thị tin nhắn mới và thời gian nhận ở leftSide
-          $(`.person[data-chat=${divId}]`).find("span.time").html(moment(data.message.createAt).locale("vi").startOf("seconds").fromNow());
-          $(`.person[data-chat=${divId}]`).find("span.preview").html(data.message.text);
-          //Đẩy user mới nhắn tin lên đầu ở leftSide
-          //Tạo 1 sự kiện lắng nghe,moveConversationToTheTop để phân biệt với thẻ khác
-          $(`.person[data-chat=${divId}]`).on("click.moveConversationToTheTop", function () {
-            let dataToMove = $(this).parent(); //Dom tới thẻ a
-            $(this).closest("ul").prepend(dataToMove); //Tìm thẻ ul gần nhất, đi từ li>a>ul và đẩy dữ liệu lên đầu
-            $(this).off("click.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
-          });
-          $(`.person[data-chat=${divId}]`).click(); //Dom đến .click  và lắng nghe đến sự kiện trên
-          //Emit realtime
-
+          dataToEmit.groupId = targetId; //Gọi emit vào để xử lí bên socket
         } else {
-          messageOfMe.text(data.message.text);
-          $(`.right .chat[data-chat=${divId}]`).append(messageOfMe);
-          //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
-          nineScrollRight(divId);
-          //Xóa đi dữ liệu đã nhập vào trong thẻ input
-          $(`#write-chat-${divId}`).val("");
-          currentEmojoneArea.find(".emojionearea-editor").text("");
-          //Hiển thị tin nhắn mới và thời gian nhận ở leftSide
-          $(`.person[data-chat=${divId}]`).find("span.time").html(moment(data.message.createAt).locale("vi").startOf("seconds").fromNow());
-          $(`.person[data-chat=${divId}]`).find("span.preview").html(data.message.text);
-          //Đẩy user mới nhắn tin lên đầu ở leftSide
-          //Tạo 1 sự kiện lắng nghe,moveConversationToTheTop là namespace để phân biệt với thẻ khác
-          $(`.person[data-chat=${divId}]`).on("click.moveConversationToTheTop", function () {
-            let dataToMove = $(this).parent(); //Dom tới thẻ a
-            $(this).closest("ul").prepend(dataToMove); //Tìm thẻ ul gần nhất, đi từ li>a>ul và đẩy dữ liệu lên đầu
-            $(this).off("click.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
-          });
-          $(`.person[data-chat=${divId}]`).click(); //Dom đến .click  và lắng nghe đến sự kiện trên
-          //Emit realtime
+          dataToEmit.contactId = targetId; //Gọi emit vào để xử lí bên socket
         }
+        //Append dữ liệu vào màn hình 
+        $(`.right .chat[data-chat=${divId}]`).append(messageOfMe);
+        //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
+        nineScrollRight(divId);
+        //Xóa đi dữ liệu đã nhập vào trong thẻ input
+        $(`#write-chat-${divId}`).val("");
+        currentEmojoneArea.find(".emojionearea-editor").text("");
+        //Hiển thị tin nhắn mới và thời gian nhận ở leftSide
+        $(`.person[data-chat=${divId}]`).find("span.time").removeClass("message-time-realtime").html(moment(data.message.createAt).locale("vi").startOf("seconds").fromNow());
+        $(`.person[data-chat=${divId}]`).find("span.preview").html(data.message.text);
+        //Đẩy user mới nhắn tin lên đầu ở leftSide
+        //Tạo 1 sự kiện lắng nghe,moveConversationToTheTop để phân biệt với thẻ khác
+        $(`.person[data-chat=${divId}]`).on("click.moveConversationToTheTop", function () {
+          let dataToMove = $(this).parent(); //Dom tới thẻ a
+          $(this).closest("ul").prepend(dataToMove); //Tìm thẻ ul gần nhất, đi từ li>a>ul và đẩy dữ liệu lên đầu
+          $(this).off("click.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
+        });
+        $(`.person[data-chat=${divId}]`).click(); //Dom đến .click  và lắng nghe đến sự kiện trên
+
+
+        //Emit realtime
+        socket.emit("chat-text-emoji", dataToEmit);
       }).fail(function (response) {
         //errors
         // console.log(response);
@@ -85,3 +73,38 @@ function textAndEmojiChat(divId) {
     }
   });
 }
+
+//Viết sự kiện lắng nghe ở người nhận
+$(document).ready(function () {
+  socket.on("response-chat-text-emoji", function (response) {
+    let divId = "";
+    //Xử lý dữ liệu trước khi hiển thị
+    let messageOfYou = $(`<div class="bubble you data-mess-id="${response.message._id}"></div>`);
+    messageOfYou.text(response.message.text);
+    if (response.currentGroupId) { //bên socket
+      let senderAvatar = `<img src="/images/users/${response.message.sender.avatar}" class="avatar-small" title="${response.message.sender.name}" />`;
+      messageOfYou.html(`${senderAvatar}`);
+      divId = response.currentGroupId;
+      //Cập nhật lại số tin nhắn
+      increaseNumberMessageGroup(divId);
+    } else {
+      divId = response.CurrentUserId;
+    }
+    //Append dữ liệu vào màn hình 
+    $(`.right .chat[data-chat=${divId}]`).append(messageOfYou);
+    //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
+    nineScrollRight(divId);
+    //Hiển thị tin nhắn mới và thời gian nhận ở leftSide
+    $(`.person[data-chat=${divId}]`).find("span.time").addClass("message-time-realtime").html(moment(response.message.createAt).locale("vi").startOf("seconds").fromNow());
+    $(`.person[data-chat=${divId}]`).find("span.preview").html(response.message.text);
+
+    //Đẩy user mới nhắn tin lên đầu ở leftSide
+    //Tạo 1 sự kiện lắng nghe,moveConversationToTheTop để phân biệt với thẻ khác
+    $(`.person[data-chat=${divId}]`).on("click.moveConversationToTheTop", function () {
+      let dataToMove = $(this).parent(); //Dom tới thẻ a
+      $(this).closest("ul").prepend(dataToMove); //Tìm thẻ ul gần nhất, đi từ li>a>ul và đẩy dữ liệu lên đầu
+      $(this).off("click.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
+    });
+    $(`.person[data-chat=${divId}]`).click(); //Dom đến .click  và lắng nghe đến sự kiện trên
+  });
+});
