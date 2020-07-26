@@ -45,11 +45,11 @@ let getAllConversationItems = (currentUserId) => {
         if (conversation.members) {
           let getMessages = await MessageModel.model.getMessagesInGroup(conversation._id, LIMIT_MESSAGE);
           //Gán conversation.messages = với mảng dữ liệu getMessages
-          conversation.messages = getMessages;
+          conversation.messages = _.reverse(getMessages); //Đảo ngược mảng để hiển thị ra tin nhắn mới nhất
         } else {
           let getMessages = await MessageModel.model.getMessages(currentUserId, conversation._id, LIMIT_MESSAGE);
           //Gán conversation.messages = với mảng dữ liệu getMessages
-          conversation.messages = getMessages;
+          conversation.messages = _.reverse(getMessages);//Đảo ngược mảng để hiển thị ra tin nhắn mới nhất
         }
 
         return conversation;

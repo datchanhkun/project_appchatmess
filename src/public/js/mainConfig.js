@@ -36,16 +36,16 @@ function enableEmojioneArea(divId) {
     shortnames: false,
     events: {
       //mỗi khi gõ 1 dữ liệu bất kỳ vào div emoij thì keyup sẽ lấy dữ liệu đó gán với input gốc
-      keyup: function(editor, event) {
+      keyup: function (editor, event) {
         $(`#write-chat-${divId}`).val(this.getText());
       },
       //Bật lắng nghe DOM cho việc chat tin nhắn văn bản + emoji
-      click: function() {
+      click: function () {
         textAndEmojiChat(divId);
       }
     },
   });
-  $('.icon-chat').bind('click', function(event) {
+  $('.icon-chat').bind('click', function (event) {
     event.preventDefault();
     $('.emojionearea-button').click();
     $('.emojionearea-editor').focus();
@@ -62,36 +62,36 @@ function spinLoading() {
 
 function ajaxLoading() {
   $(document)
-    .ajaxStart(function() {
+    .ajaxStart(function () {
       spinLoading();
     })
-    .ajaxStop(function() {
+    .ajaxStop(function () {
       spinLoaded();
     });
 }
 
 function showModalContacts() {
-  $('#show-modal-contacts').click(function() {
+  $('#show-modal-contacts').click(function () {
     $(this).find('.noti_contact_counter').fadeOut('slow');
   });
 }
 
 function configNotification() {
-  $('#noti_Button').click(function() {
+  $('#noti_Button').click(function () {
     $('#notifications').fadeToggle('fast', 'linear');
     $('.noti_counter').fadeOut('slow');
     return false;
   });
-  $(".main-content").click(function() {
+  $(".main-content").click(function () {
     $('#notifications').fadeOut('fast', 'linear');
   });
 }
 
 function gridPhotos(layoutNumber) {
-  $(".show-images").unbind("click").on("click", function() {
+  $(".show-images").unbind("click").on("click", function () {
     //Lấy địa chỉ của ảnh, tách ra để lấy được id của mỗi ảnh
     let href = $(this).attr("href");
-    let modalImagesId = href.replace("#","");
+    let modalImagesId = href.replace("#", "");
 
     let countRows = Math.ceil($(`#${modalImagesId}`).find("div.all-images>img").length / layoutNumber);
     let layoutStr = new Array(countRows).fill(layoutNumber).join("");
@@ -101,7 +101,7 @@ function gridPhotos(layoutNumber) {
       rel: "withhearts-gallery",
       gutter: "2px",
       layout: layoutStr,
-      onComplete: function() {
+      onComplete: function () {
         $(`#${modalImagesId}`).find(".all-images").css({
           "visibility": "visible"
         });
@@ -118,27 +118,27 @@ function gridPhotos(layoutNumber) {
 
 
 function addFriendsToGroup() {
-  $('ul#group-chat-friends').find('div.add-user').bind('click', function() {
+  $('ul#group-chat-friends').find('div.add-user').bind('click', function () {
     let uid = $(this).data('uid');
     $(this).remove();
     let html = $('ul#group-chat-friends').find('div[data-uid=' + uid + ']').html();
 
-    let promise = new Promise(function(resolve, reject) {
+    let promise = new Promise(function (resolve, reject) {
       $('ul#friends-added').append(html);
       $('#groupChatModal .list-user-added').show();
       resolve(true);
     });
-    promise.then(function(success) {
+    promise.then(function (success) {
       $('ul#group-chat-friends').find('div[data-uid=' + uid + ']').remove();
     });
   });
 }
 
 function cancelCreateGroup() {
-  $('#cancel-group-chat').bind('click', function() {
+  $('#cancel-group-chat').bind('click', function () {
     $('#groupChatModal .list-user-added').hide();
     if ($('ul#friends-added>li').length) {
-      $('ul#friends-added>li').each(function(index) {
+      $('ul#friends-added>li').each(function (index) {
         $(this).remove();
       });
     }
@@ -148,16 +148,16 @@ function cancelCreateGroup() {
 function flashMasterNotify() {
   let notify = $(".master-success-message").text();
   //Neu ton tai loi
-  if(notify.length) {
-    alertify.notify(notify,"success",7) // cho hien thi thong bao 7s
+  if (notify.length) {
+    alertify.notify(notify, "success", 7) // cho hien thi thong bao 7s
   }
 }
 //Bắt sự kiện khi select kiểu chát
 function changeTypeChat() {
-  $("#select-type-chat").bind("change", function() {
-    let optionSelected = $("option:selected",this);
+  $("#select-type-chat").bind("change", function () {
+    let optionSelected = $("option:selected", this);
     optionSelected.tab("show");
-    if($(this).val() == "user-chat") {
+    if ($(this).val() == "user-chat") {
       $(".create-group-chat").hide();
     } else {
       $(".create-group-chat").show();
@@ -167,23 +167,24 @@ function changeTypeChat() {
 
 //Bắt sự kiện click user chat để hiển thị nội dung, truy xuất vào thẻ a
 function changeScreenChat() {
-  $(".room-chat").unbind("click").on("click", function() {
+  $(".room-chat").unbind("click").on("click", function () {
+    //Cấu hình thanh cuộn bên box chat rightSide.ejs mỗi khi người dùng click vào một cuộc trò chuyện cụ thể
+    let divId = $(this).find("li").data("chat");
     //Remove thẻ li thành màu trắng
-      $(".person").removeClass("active");
-      //khi click vào thì màu xám gọi đến active
-      $(this).find("li").addClass("active");
-      $(this).tab("show");
+    $(".person").removeClass("active");
+    //khi click vào thì màu xám gọi đến active
+    $(`.person[data-chat=${divId}]`).addClass("active");
+    $(this).tab("show");
 
-      //Cấu hình thanh cuộn bên box chat rightSide.ejs mỗi khi người dùng click vào một cuộc trò chuyện cụ thể
-      let divId = $(this).find("li").data("chat");
 
-      nineScrollRight(divId);
-      //Mỗi khi thay đổi màn hình chát thì resert lại chat icon
-      // Bật emoji, tham số truyền vào là id của box nhập nội dung tin nhắn
-      enableEmojioneArea(divId);
+
+    nineScrollRight(divId);
+    //Mỗi khi thay đổi màn hình chát thì resert lại chat icon
+    // Bật emoji, tham số truyền vào là id của box nhập nội dung tin nhắn
+    enableEmojioneArea(divId);
   });
 }
-$(document).ready(function() {
+$(document).ready(function () {
   // Hide số thông báo trên đầu icon mở modal contact
   showModalContacts();
 
