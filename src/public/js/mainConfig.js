@@ -11,15 +11,15 @@ function nineScrollLeft() {
   });
 }
 
-function nineScrollRight() {
-  $('.right .chat').niceScroll({
+function nineScrollRight(divId) {
+  $(`.right .chat[data-chat = ${divId}]`).niceScroll({
     smoothscroll: true,
     horizrailenabled: false,
     cursorcolor: '#ECECEC',
     cursorwidth: '7px',
     scrollspeed: 50
   });
-  $('.right .chat').scrollTop($('.right .chat')[0].scrollHeight);
+  $(`.right .chat[data-chat = ${divId}]`).scrollTop($(`.right .chat[data-chat = ${divId}]`)[0].scrollHeight);
 }
 
 function enableEmojioneArea(chatId) {
@@ -82,24 +82,31 @@ function configNotification() {
 }
 
 function gridPhotos(layoutNumber) {
-  let countRows = Math.ceil($('#imagesModal').find('div.all-images>img').length / layoutNumber);
-  let layoutStr = new Array(countRows).fill(layoutNumber).join("");
-  $('#imagesModal').find('div.all-images').photosetGrid({
-    highresLinks: true,
-    rel: 'withhearts-gallery',
-    gutter: '2px',
-    layout: layoutStr,
-    onComplete: function() {
-      $('.all-images').css({
-        'visibility': 'visible'
-      });
-      $('.all-images a').colorbox({
-        photo: true,
-        scalePhotos: true,
-        maxHeight: '90%',
-        maxWidth: '90%'
-      });
-    }
+  $(".show-images").unbind("click").on("click", function() {
+    //Lấy địa chỉ của ảnh, tách ra để lấy được id của mỗi ảnh
+    let href = $(this).attr("href");
+    let modalImagesId = href.replace("#","");
+
+    let countRows = Math.ceil($(`#${modalImagesId}`).find("div.all-images>img").length / layoutNumber);
+    let layoutStr = new Array(countRows).fill(layoutNumber).join("");
+
+    $(`#${modalImagesId}`).find("div.all-images").photosetGrid({
+      highresLinks: true,
+      rel: "withhearts-gallery",
+      gutter: "2px",
+      layout: layoutStr,
+      onComplete: function() {
+        $(`#${modalImagesId}`).find(".all-images").css({
+          "visibility": "visible"
+        });
+        $(`#${modalImagesId}`).find(".all-images a").colorbox({
+          photo: true,
+          scalePhotos: true,
+          maxHeight: "90%",
+          maxWidth: "90%"
+        });
+      }
+    });
   });
 }
 
@@ -160,6 +167,12 @@ function changeScreenChat() {
       //khi click vào thì màu xám gọi đến active
       $(this).find("li").addClass("active");
       $(this).tab("show");
+
+      //Cấu hình thanh cuộn bên box chat rightSide.ejs mỗi khi người dùng click vào một cuộc trò chuyện cụ thể
+      let divId = $(this).find("li").data("chat");
+
+      nineScrollRight(divId);
+
   });
 }
 $(document).ready(function() {
@@ -171,7 +184,6 @@ $(document).ready(function() {
 
   // Cấu hình thanh cuộn
   nineScrollLeft();
-  nineScrollRight();
 
   // Bật emoji, tham số truyền vào là id của box nhập nội dung tin nhắn
   enableEmojioneArea("17071995");
