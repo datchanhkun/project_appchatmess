@@ -22,6 +22,20 @@ ChatGroupSchema.statics = {
       //Sử dụng elemMatch của mongoose nếu userId có tồn tại trong mảng thì lấy cả members
       "members": {$elemMatch: {"userId": userId}}
     }).sort({"updateAt": -1}).limit(limit).exec();
+  },
+  getChatGroupById(id) {
+    return this.findById(id).exec();
+  },
+  /**
+   * 
+   * @param {String} id  id của group chat
+   * @param {Number} newMessageAmount 
+   */
+  updateWhenHasNewMessage(id, newMessageAmount) {
+    return this.findByIdAndUpdate(id,{
+      "messageAmount": newMessageAmount,
+      "updateAt": Date.now()
+    }).exec();
   }
 };
 module.exports = mongoose.model("chatGroup", ChatGroupSchema);
