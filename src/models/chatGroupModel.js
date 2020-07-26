@@ -36,6 +36,12 @@ ChatGroupSchema.statics = {
       "messageAmount": newMessageAmount,
       "updateAt": Date.now()
     }).exec();
+  },
+  getChatGroupIdsByUser(userId) {
+    return this.find({
+      //Sử dụng elemMatch của mongoose nếu userId có tồn tại trong mảng thì lấy cả members
+      "members": {$elemMatch: {"userId": userId}}
+    },{_id: 1}).exec();
   }
 };
 module.exports = mongoose.model("chatGroup", ChatGroupSchema);

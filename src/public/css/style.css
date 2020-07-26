@@ -1400,3 +1400,8 @@ label:focus,
 .show-number-members, .show-number-messages {
   color: #2c3e59 !important;
 }
+/* css cho thời gian khi nhận tin nhắn mới */
+.message-time-realtime {
+  color: #e74c3c !important;
+  font-weight: bold;
+}
