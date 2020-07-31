@@ -53,12 +53,12 @@ function textAndEmojiChat(divId) {
         $(`.person[data-chat=${divId}]`).find("span.preview").html(data.message.text);
         //Đẩy user mới nhắn tin lên đầu ở leftSide
         //Tạo 1 sự kiện lắng nghe,moveConversationToTheTop để phân biệt với thẻ khác
-        $(`.person[data-chat=${divId}]`).on("click.moveConversationToTheTop", function () {
+        $(`.person[data-chat=${divId}]`).on("clickcustom.moveConversationToTheTop", function () {
           let dataToMove = $(this).parent(); //Dom tới thẻ a
           $(this).closest("ul").prepend(dataToMove); //Tìm thẻ ul gần nhất, đi từ li>a>ul và đẩy dữ liệu lên đầu
-          $(this).off("click.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
+          $(this).off("clickcustom.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
         });
-        $(`.person[data-chat=${divId}]`).click(); //Dom đến .click  và lắng nghe đến sự kiện trên
+        $(`.person[data-chat=${divId}]`).trigger("clickcustom.moveConversationToTheTop"); //sử dụng trigger để không bị nhảy lên đầu khi đang nhập nội dung chat
 
 
         //Emit realtime
@@ -85,26 +85,34 @@ $(document).ready(function () {
       let senderAvatar = `<img src="/images/users/${response.message.sender.avatar}" class="avatar-small" title="${response.message.sender.name}" />`;
       messageOfYou.html(`${senderAvatar}`);
       divId = response.currentGroupId;
-      //Cập nhật lại số tin nhắn
-      increaseNumberMessageGroup(divId);
+      if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+        //Cập nhật lại số tin nhắn
+        increaseNumberMessageGroup(divId);
+      }
     } else {
       divId = response.CurrentUserId;
     }
-    //Append dữ liệu vào màn hình 
-    $(`.right .chat[data-chat=${divId}]`).append(messageOfYou);
-    //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
-    nineScrollRight(divId);
+
+    //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
+    if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+      //Append dữ liệu vào màn hình 
+      $(`.right .chat[data-chat=${divId}]`).append(messageOfYou);
+      //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
+      nineScrollRight(divId);
+      $(`.person[data-chat=${divId}]`).find("span.time").addClass("message-time-realtime");
+    }
+
     //Hiển thị tin nhắn mới và thời gian nhận ở leftSide
-    $(`.person[data-chat=${divId}]`).find("span.time").addClass("message-time-realtime").html(moment(response.message.createAt).locale("vi").startOf("seconds").fromNow());
+    $(`.person[data-chat=${divId}]`).find("span.time").html(moment(response.message.createAt).locale("vi").startOf("seconds").fromNow());
     $(`.person[data-chat=${divId}]`).find("span.preview").html(response.message.text);
 
     //Đẩy user mới nhắn tin lên đầu ở leftSide
     //Tạo 1 sự kiện lắng nghe,moveConversationToTheTop để phân biệt với thẻ khác
-    $(`.person[data-chat=${divId}]`).on("click.moveConversationToTheTop", function () {
+    $(`.person[data-chat=${divId}]`).on("clickcustom.moveConversationToTheTop", function () {
       let dataToMove = $(this).parent(); //Dom tới thẻ a
       $(this).closest("ul").prepend(dataToMove); //Tìm thẻ ul gần nhất, đi từ li>a>ul và đẩy dữ liệu lên đầu
-      $(this).off("click.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
+      $(this).off("clickcustom.moveConversationToTheTop"); //Đóng sự kiện lại để không bắt trường hợp click
     });
-    $(`.person[data-chat=${divId}]`).click(); //Dom đến .click  và lắng nghe đến sự kiện trên
+    $(`.person[data-chat=${divId}]`).trigger("clickcustom.moveConversationToTheTop"); //sử dụng trigger để không bị nhảy lên đầu khi đang nhập nội dung chat
   });
 });
