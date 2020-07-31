@@ -12,16 +12,16 @@ let chatTextEmoji = (io) => {
       clients[currentUserId] = [socket.id];
     }
     // console.log(socket.request.user);
-    // socket.request.user.chatGroupIds.forEach(group => {
-    //   let currentUserId = group._id;//Lấy id của user hiện tại
-    //   // console.log(socket.request.user);
-    //   if (clients[currentUserId]) { //nếu đang tồn tại id của người dùng đang đăng nhập
-    //     //Trường hợp người dùng f5 hoặc mở tab mới thì push socket id vào trong mảng của clients
-    //     clients[currentUserId].push(socket.id);
-    //   } else { //Trường hợp người dùng đăng nhập lần đầu thì sẽ gán id user vs id của socket vào clients
-    //     clients[currentUserId] = [socket.id];
-    //   }
-    // });
+    socket.request.user.chatGroupIds.forEach(group => {
+      currentUserId = group._id;//Lấy id của user hiện tại
+      // console.log(socket.request.user);
+      if (clients[currentUserId]) { //nếu đang tồn tại id của người dùng đang đăng nhập
+        //Trường hợp người dùng f5 hoặc mở tab mới thì push socket id vào trong mảng của clients
+        clients[currentUserId].push(socket.id);
+      } else { //Trường hợp người dùng đăng nhập lần đầu thì sẽ gán id user vs id của socket vào clients
+        clients[currentUserId] = [socket.id];
+      }
+    });
     //socket.on là lắng nghe sự kiện tạo ra, data: contactId
     socket.on("chat-text-emoji", (data) => {
       if (data.groupId) {
@@ -63,16 +63,16 @@ let chatTextEmoji = (io) => {
       if (!clients[currentUserId].length) {
         delete clients[currentUserId];
       }
-      // socket.request.user.chatGroupIds.forEach(group => {
-      //   let currentUserId = group._id;//Lấy id của user hiện tại
-      //   clients[currentUserId] = clients[currentUserId].filter(socketId => {
-      //     return socketId !== socket.id;
-      //   });
-      //   //Trường hợp người dùng không còn truy cập nữa thì xóa clients đi
-      //   if (!clients[currentUserId].length) {
-      //     delete clients[currentUserId];
-      //   }
-      // });
+      socket.request.user.chatGroupIds.forEach(group => {
+        currentUserId = group._id;//Lấy id của user hiện tại
+        clients[currentUserId] = clients[currentUserId].filter(socketId => {
+          return socketId !== socket.id;
+        });
+        //Trường hợp người dùng không còn truy cập nữa thì xóa clients đi
+        if (!clients[currentUserId].length) {
+          delete clients[currentUserId];
+        }
+      });
     });
     // console.log(clients);
   });
