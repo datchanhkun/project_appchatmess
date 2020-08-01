@@ -30,7 +30,7 @@ function textAndEmojiChat(divId) {
         //Success
         // console.log(data.message);
         //Xử lý dữ liệu trước khi hiển thị
-        let messageOfMe = $(`<div class="bubble me data-mess-id="${data.message._id}"></div>`);
+        let messageOfMe = $(`<div class="bubble me" data-mess-id="${data.message._id}"></div>`);
         messageOfMe.text(data.message.text);
         if (dataTextEmojiForSend.isChatGroup) {
           let senderAvatar = `<img src="/images/users/${data.message.sender.avatar}" class="avatar-small" title="${data.message.sender.name}" />`;
@@ -88,7 +88,7 @@ $(document).ready(function () {
   socket.on("response-chat-text-emoji", function (response) {
     let divId = "";
     //Xử lý dữ liệu trước khi hiển thị
-    let messageOfYou = $(`<div class="bubble you data-mess-id="${response.message._id}"></div>`);
+    let messageOfYou = $(`<div class="bubble you" data-mess-id="${response.message._id}"></div>`);
     messageOfYou.text(response.message.text);
     if (response.currentGroupId) { //bên socket
       let senderAvatar = `<img src="/images/users/${response.message.sender.avatar}" class="avatar-small" title="${response.message.sender.name}" />`;
