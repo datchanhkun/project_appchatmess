@@ -195,8 +195,13 @@ function changeScreenChat() {
     enableEmojioneArea(divId);
     //Bật lắng nghe DOM cho việc chat tin nhắn hình ảnh
     imageChat(divId);
+    //Bật lắng nghe DOM cho việc chat đính kèm tệp
+    attachmentChat(divId);
   });
+
 }
+
+
 $(document).ready(function () {
   // Hide số thông báo trên đầu icon mở modal contact
   showModalContacts();

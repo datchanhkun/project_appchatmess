@@ -64,6 +64,7 @@ let imageMessageUploadFile = multer({
   storage: storageImageChat, //nơi lưu trữ
   limits: { fileSize: app.image_message_limit_size } //validation giới hạn 1MB cho img
 }).single("my-image-chat"); //cho phép upload 1 img và truyền 'my-image-chat' vào formData
+
 let addNewImage = (req,res) => {
   imageMessageUploadFile(req,res, async (error) => {
     if (error) {
@@ -101,8 +102,63 @@ let addNewImage = (req,res) => {
 
 };
 
+//Khai bao' noi upload file len server
+let storageAttachmentChat = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, app.attachment_message_directory);
+  },
+  filename: (req, file, callback) => {
+    //Kiem tra tên của ảnh có thể trùng, nên check thời gian up lên và khởi tạo 1 chuỗi ngẫu nhiên bằng uuidv4
+    let attachmentName = `${file.originalname}`;
+    callback(null, attachmentName);
+  }
+});
+
+//Validate error truoc khi upload img
+let attachmentMessageUploadFile = multer({
+  storage: storageAttachmentChat, //nơi lưu trữ
+  limits: { fileSize: app.attachment_message_limit_size } //validation giới hạn 1MB cho img
+}).single("my-attachment-chat"); //cho phép upload 1 img và truyền 'my-attachment-chat' vào formData
+
+let addNewAttachment = (req,res) => {
+  attachmentMessageUploadFile(req,res, async (error) => {
+    if (error) {
+      //Vì multer chưa hỗ trợ handle lỗi ra nên phải ghi đè lỗi
+      if (error.message) {
+        //Dùng status để không reload lại trang
+        return res.status(500).send(transErrors.attachment_message_size);
+      }
+      return res.status(500).send(error);
+    }
+    try {
+      //Lấy dữ liệu truyền lên từ phía client textAndEmojiChat.js
+      let sender = {
+        id: req.user._id,
+        name: req.user.username,
+        avatar: req.user.avatar
+      };
+  
+      let receiverId = req.body.uid;
+      let messageValue = req.file; //handle duoc tu multer
+      let isChatGroup = req.body.isChatGroup;
+      // console.log(receiverId);
+      // console.log(messageValue);
+      // console.log(isChatGroup);
+  
+      let newMessage = await message.addNewAttachment(sender,receiverId,messageValue,isChatGroup);
+    
+      //Xóa image trong folder để lưu vào trong mongoDB
+      await fsExtra.remove(`${app.attachment_message_directory}/${newMessage.file.fileName}`);
+      return res.status(200).send({message: newMessage}); //client
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  });
+
+};
 
 module.exports = {
   addNewTextEmoji: addNewTextEmoji,
-  addNewImage: addNewImage
+  addNewImage: addNewImage,
+  addNewAttachment: addNewAttachment
 };

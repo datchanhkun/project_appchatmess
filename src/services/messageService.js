@@ -220,8 +220,89 @@ let addNewImage = (sender, receiverId, messageValue, isChatGroup) => {
     }
   });
 };
+
+/**
+ * 
+ * @param {Object} sender người dùng hiện tại 
+ * @param {String} receiverId 1 người dùng hoặc 1 nhóm
+ * @param {file} messageValue nội dung cuộc trò chuyện
+ * @param {boolean} isChatGroup  kiểm tra trò chuyện cá nhân hay trò chuyện group
+ */
+let addNewAttachment = (sender, receiverId, messageValue, isChatGroup) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (isChatGroup) {
+        let getChatGroupReceiver = await ChatGroupModel.getChatGroupById(receiverId);
+        if (!getChatGroupReceiver) { //Kiểm tra nếu cuộc trò chuyện không tồn tại thì thông báo lỗi
+          return reject(transErrors.conversation_not_found);
+        }
+        //Nếu có tồn tại
+        let receiver = {
+          id: getChatGroupReceiver._id,
+          name: getChatGroupReceiver.name, //Chatgroupmodel
+          avatar: app.general_avatar_group_chat
+        };
+        //Convert dữ liệu hình ảnh từ controller truyền sang thành 1 dạng buffer
+        let attachmentBuffer = await fsExtra.readFile(messageValue.path);
+        let attachmentContentType = messageValue.mimetype;
+        let attachmentName = messageValue.originalname;
+
+        let newMessageItem = {
+          senderId: sender.id,
+          receiverId: receiver.id,
+          conversationType: MessageModel.conversationType.GROUP,
+          messageType: MessageModel.messageType.FILE,
+          sender: sender,
+          receiver: receiver,
+          file: {data: attachmentBuffer, contentType: attachmentContentType, fileName: attachmentName},
+          createAt: Date.now()
+        };
+        //tạo mới 1 tin nhắn 
+        let newMessage = await MessageModel.model.createNew(newMessageItem);
+        //Cập nhật lại thông tin của nhóm trò chuyện để người dùng nhận tin nhắn nhảy lên đầu ở leftside
+        await ChatGroupModel.updateWhenHasNewMessage(getChatGroupReceiver._id,getChatGroupReceiver.messageAmount + 1); //Bởi vì mỗi lần chỉ nhắn đ 1 tin nhắn
+        resolve(newMessage);
+      } else {
+        let getUserReceiver = await UserModel.getNormalUserDataById(receiverId); //id cuar contact
+        if (!getUserReceiver) { //Kiểm tra nếu cuộc trò chuyện không tồn tại thì thông báo lỗi
+          return reject(transErrors.conversation_not_found);
+        }
+        //Nếu có tồn tại
+        let receiver = {
+          id: getUserReceiver._id,
+          name: getUserReceiver.username, //usermodel
+          avatar: getUserReceiver.avatar
+        };
+
+        //Convert dữ liệu hình ảnh từ controller truyền sang thành 1 dạng buffer
+        let attachmentBuffer = await fsExtra.readFile(messageValue.path);
+        let attachmentContentType = messageValue.mimetype;
+        let attachmentName = messageValue.originalname;
+        
+        let newMessageItem = {
+          senderId: sender.id,
+          receiverId: receiver.id,
+          conversationType: MessageModel.conversationType.PERSONAL,
+          messageType: MessageModel.messageType.FILE,
+          sender: sender,
+          receiver: receiver,
+          file: {data: attachmentBuffer, contentType: attachmentContentType, fileName: attachmentName},
+          createAt: Date.now()
+        };
+
+        let newMessage = await MessageModel.model.createNew(newMessageItem);
+        //Cập nhật lại thông tin của cuộc trò chuyện để người dùng nhận tin nhắn nhảy lên đầu ở leftside
+        await ContactModel.updateWhenHasNewMessage(sender.id,getUserReceiver._id);
+        resolve(newMessage);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   getAllConversationItems: getAllConversationItems,
   addNewTextEmoji: addNewTextEmoji,
-  addNewImage: addNewImage
+  addNewImage: addNewImage,
+  addNewAttachment: addNewAttachment
 }
