@@ -8,7 +8,7 @@ import typingOn from "./chat/typingOn";
 import typingOff from "./chat/typingOff";
 import chatImage from "./chat/chatImage";
 import chatAttachment from "./chat/chatAttachment";
-
+import userOnlineOffline from "./status/userOnlineOffline";
 //Để gọi qua server.js
 let initSockets = (io) => {
   addNewContact(io);
@@ -21,6 +21,7 @@ let initSockets = (io) => {
   typingOff(io);
   chatImage(io);
   chatAttachment(io);
+  userOnlineOffline(io);
   //
 }
 
