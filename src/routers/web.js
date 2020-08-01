@@ -84,6 +84,9 @@ let initRouters = (app) => {
 
   //Tạo router message + emoji
   router.post("/message/add-new-text-emoji", auth.checkLoggedIn,messageValid.checkMessageLength,message.addNewTextEmoji);
+  //Tạo router message image
+  router.post("/message/add-new-image", auth.checkLoggedIn,message.addNewImage);
+  
   return app.use("/", router);
 };
 
