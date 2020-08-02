@@ -10,8 +10,7 @@ function attachmentChat(divId) {
 
     if (fileData.size > limit) {
       alertify.notify("Tệp tin upload cho phép tối đa là 1MB!", "error", 7);
-      //refresh lai image
-      $("#input-change-avatar").val(null);
+      $(this).val(null);
       return false;
     }
 
@@ -22,7 +21,7 @@ function attachmentChat(divId) {
     messageformData.append("my-attachment-chat", fileData);
     messageformData.append("uid", targetId);
 
-    if ($(this).hasClass("chat-in-group")) {
+    if($(this).hasClass("chat-in-group")) {
       messageformData.append("isChatGroup", true);
       isChatGroup = true;
     }
@@ -57,7 +56,6 @@ function attachmentChat(divId) {
           messageOfMe.html(attachmentChat);
           dataToEmit.contactId = targetId; //Gọi emit vào để xử lí bên socket
         }
-
         //Append dữ liệu vào màn hình 
         $(`.right .chat[data-chat=${divId}]`).append(messageOfMe);
         //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
@@ -108,17 +106,17 @@ $(document).ready(function () {
       let senderAvatar = `<img src="/images/users/${response.message.sender.avatar}" class="avatar-small" title="${response.message.sender.name}" />`;
       messageOfYou.html(`${senderAvatar} ${attachmentChat}`);
       divId = response.currentGroupId;
-      if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+      if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
         //Cập nhật lại số tin nhắn
         increaseNumberMessageGroup(divId);
       }
     } else {
       messageOfYou.html(attachmentChat);
-      divId = response.CurrentUserId;
+      divId = response.currentUserId;
     }
 
     //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
-    if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+    if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
       //Append dữ liệu vào màn hình 
       $(`.right .chat[data-chat=${divId}]`).append(messageOfYou);
       //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
@@ -143,7 +141,7 @@ $(document).ready(function () {
 
     //Thêm ảnh vào modal xem tất cả ảnh
     //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
-    if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+    if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
       let attachmentChatToAddModal = `<li>
       <a href="data:${response.message.file.contentType}; base64,${bufferToBase64(response.message.file.data.data)}"
           download="${bufferToBase64(response.message.file.fileName)}">

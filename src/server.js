@@ -10,7 +10,7 @@ import passport from "passport";
 import http from "http";
 import socketio from "socket.io";
 import initSockets from "./sockets/index";
-
+import events from "events";
 
 import cookieParser from "cookie-parser";
 import configSocketIo from "./config/socketio";
@@ -53,7 +53,7 @@ import configSocketIo from "./config/socketio";
 // });
 //Init app
 let app = express();
-
+events.EventEmitter.defaultMaxListeners = 20;
 //Init server với socket.io và express app
 let server = http.createServer(app);
 let io = socketio(server);

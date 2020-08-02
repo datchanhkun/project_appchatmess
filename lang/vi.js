@@ -9,7 +9,9 @@ export const transValidation = {
   update_address: "Địa chỉ chỉ được chứa 3-30 kí tự!",
   update_phone: "Số điện thoại bắt đầu và số 0 và chỉ bao gồm 10 kí tự!",
   keyword_find_user: "Chỉ cho phép nhập vào chữ cái , số và khoảng trắng",
-  message_text_emoji_incorrect: "Tin nhắn không hợp lệ. Độ dài kí tự giới hạn từ 1-400 kí tự!"
+  message_text_emoji_incorrect: "Tin nhắn không hợp lệ. Độ dài kí tự giới hạn từ 1-400 kí tự!",
+  add_new_group_users_incorrect: "Vui lòng chọn bạn bè để thêm vào nhóm, tối thiểu 2 người!",
+  add_new_group_name_incorrect: "Vui lòng nhập tên cuộc trò chuyện giới hạn từ 5-30 kí tự và không chứa các kí tự đặc biệt!"
 };
 
 export const transErrors = {

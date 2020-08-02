@@ -44,7 +44,7 @@ UserSchema.statics = {
   },
   //Trả lại thông tin user và loại bỏ password để trả lại cho người dùng
   findUserByIdForSessionToUse(id) {
-    return this.findById(id,{"local.password": 0}).exec();
+    return this.findById(id, { "local.password": 0 }).exec();
   },
   findByFacebookUid(uid) {
     return this.findOne({ "facebook.uid": uid }).exec();
@@ -82,7 +82,28 @@ UserSchema.statics = {
   //Hàm lấy những trường cần thiết để view ra tìm kiếm theo id
   getNormalUserDataById(id) {
     return this.findById(id, { _id: 1, username: 1, address: 1, avatar: 1 }).exec();
+  },
+  //Hàm tìm kiếm user còn lại trong contact sau khi đã lọc
+  findAllToAddGroupChat(friendIds, keyword) {
+    return this.find({
+      $and: [
+        //"nin: viet tat cua not in"
+        //Lọc ra những id không nằm trong mảng deprecatedUserIds
+        { "_id": { $in: friendIds } },
+        { "local.isActive": true },
+        {
+          $or: [
+            //Tìm những user có username gần giống với keyword mà người dùng nhập vào theo $regex
+            { "username": { "$regex": new RegExp(keyword, "i") } },
+            { "local.email": { "$regex": new RegExp(keyword, "i") } },
+            { "facebook.email": { "$regex": new RegExp(keyword, "i") } },
+            { "google.email": { "$regex": new RegExp(keyword, "i") } }
+          ]
+        }
+      ]
+    }, { _id: 1, username: 1, address: 1, avatar: 1 }).exec(); //cho phép lấy ra những field trong DB ra
   }
+
 };
 
 UserSchema.methods = {
