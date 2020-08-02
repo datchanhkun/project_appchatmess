@@ -1,6 +1,6 @@
 import express from "express";
-import { home, auth, user, contact, notification, message } from "./../controllers/index";
-import { authValid, userValid, contactValid, messageValid } from "./../validation/index";
+import { home, auth, user, contact, notification, message, groupChat } from "./../controllers/index";
+import { authValid, userValid, contactValid, messageValid , groupChatValid} from "./../validation/index";
 import passport from "passport";
 import initPassportLocal from "./../controllers/passportController/local";
 import initPassportFacebook from "./../controllers/passportController/facebook";
@@ -77,6 +77,9 @@ let initRouters = (app) => {
   //Read more contacts yêu cầu kết bạn
   router.get("/contact/read-more-contacts-received", auth.checkLoggedIn, contact.readMoreContactsReceived);
 
+  //Find user create group chat
+  router.get("/contact/search-friends/:keyword", auth.checkLoggedIn, contactValid.searchFriends, contact.searchFriends);
+
   //Read more notification
   router.get("/notification/read-more", auth.checkLoggedIn, notification.readMore);
   //Tạo router cho click đánh dấu tất cả đã đọc
@@ -88,6 +91,8 @@ let initRouters = (app) => {
   router.post("/message/add-new-image", auth.checkLoggedIn, message.addNewImage);
   //Tạo router message attachment
   router.post("/message/add-new-attachment", auth.checkLoggedIn, message.addNewAttachment);
+  //Tạo router tạo mới 1 group chat
+  router.post("/group-chat/add-new", auth.checkLoggedIn, groupChatValid.addNewGroup, groupChat.addNewGroup);
 
   return app.use("/", router);
 };

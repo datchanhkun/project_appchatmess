@@ -31,14 +31,16 @@ function textAndEmojiChat(divId) {
         // console.log(data.message);
         //Xử lý dữ liệu trước khi hiển thị
         let messageOfMe = $(`<div class="bubble me" data-mess-id="${data.message._id}"></div>`);
-        messageOfMe.text(data.message.text);
+
         if (dataTextEmojiForSend.isChatGroup) {
           let senderAvatar = `<img src="/images/users/${data.message.sender.avatar}" class="avatar-small" title="${data.message.sender.name}" />`;
           messageOfMe.html(`${senderAvatar}`);
+          messageOfMe.text(data.message.text);
           //Cập nhật lại số tin nhắn
           increaseNumberMessageGroup(divId);
           dataToEmit.groupId = targetId; //Gọi emit vào để xử lí bên socket
         } else {
+          messageOfMe.text(data.message.text);
           dataToEmit.contactId = targetId; //Gọi emit vào để xử lí bên socket
         }
         //Append dữ liệu vào màn hình 
@@ -89,21 +91,23 @@ $(document).ready(function () {
     let divId = "";
     //Xử lý dữ liệu trước khi hiển thị
     let messageOfYou = $(`<div class="bubble you" data-mess-id="${response.message._id}"></div>`);
-    messageOfYou.text(response.message.text);
+ 
     if (response.currentGroupId) { //bên socket
       let senderAvatar = `<img src="/images/users/${response.message.sender.avatar}" class="avatar-small" title="${response.message.sender.name}" />`;
       messageOfYou.html(`${senderAvatar}`);
+      messageOfYou.text(response.message.text);
       divId = response.currentGroupId;
-      if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+      if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
         //Cập nhật lại số tin nhắn
         increaseNumberMessageGroup(divId);
       }
     } else {
-      divId = response.CurrentUserId;
+      messageOfYou.text(response.message.text);
+      divId = response.currentUserId;
     }
 
     //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
-    if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+    if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
       //Append dữ liệu vào màn hình 
       $(`.right .chat[data-chat=${divId}]`).append(messageOfYou);
       //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 

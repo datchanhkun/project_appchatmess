@@ -18,8 +18,6 @@ function imageChat(divId) {
     }
     if (fileData.size > limit) {
       alertify.notify("Ảnh upload cho phép tối đa là 1MB!", "error", 7);
-      //refresh lai image
-      $("#input-change-avatar").val(null);
       return false;
     }
 
@@ -108,17 +106,17 @@ $(document).ready(function () {
       let senderAvatar = `<img src="/images/users/${response.message.sender.avatar}" class="avatar-small" title="${response.message.sender.name}" />`;
       messageOfYou.html(`${senderAvatar} ${imageChat}`);
       divId = response.currentGroupId;
-      if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+      if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
         //Cập nhật lại số tin nhắn
         increaseNumberMessageGroup(divId);
       }
     } else {
       messageOfYou.html(imageChat);
-      divId = response.CurrentUserId;
+      divId = response.currentUserId;
     }
 
     //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
-    if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+    if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
       //Append dữ liệu vào màn hình 
       $(`.right .chat[data-chat=${divId}]`).append(messageOfYou);
       //Cập nhật lại scroll để kéo xuống cuối cùng sau khi add tin nhắn vào 
@@ -142,7 +140,7 @@ $(document).ready(function () {
 
     //Thêm ảnh vào modal xem tất cả ảnh
     //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
-    if (response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+    if (response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
       let imageChatToAddModal = `<img src="data:${response.message.file.contentType}; base64,${bufferToBase64(response.message.file.data.data)}">`;
       $(`#imagesModal_${divId}`).find("div.all-images").append(imageChatToAddModal);
     }

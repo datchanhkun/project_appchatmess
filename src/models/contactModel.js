@@ -59,14 +59,14 @@ ContactSchema.statics = {
           $and: [
             { "userId": userId }, //Kiểm tra userId có trùng với userId truyền vào
             { "contactId": contactId },
-            {"status": true} //Đã là bạn bè rồi mới được xóa
+            { "status": true } //Đã là bạn bè rồi mới được xóa
           ]
         },
         {
           $and: [
             { "userId": contactId },
             { "contactId": userId }, //Kiểm tra userId có trùng với userId truyền vào
-            {"status": true} //Đã là bạn bè rồi mới được xóa
+            { "status": true } //Đã là bạn bè rồi mới được xóa
           ]
         }
       ]
@@ -78,7 +78,7 @@ ContactSchema.statics = {
       $and: [
         { "userId": userId }, //Kiểm tra userId có trùng với userId truyền vào
         { "contactId": contactId },
-        { "status": false} 
+        { "status": false }
       ]
     }).exec();
   },
@@ -89,7 +89,7 @@ ContactSchema.statics = {
         //Đảo người lại contactId và userID
         { "contactId": userId }, //Kiểm tra userId có trùng với userId truyền vào
         { "userId": contactId },
-        { "status": false} 
+        { "status": false }
       ]
     }).exec();
   },
@@ -100,7 +100,7 @@ ContactSchema.statics = {
         //Đảo người lại contactId và userID
         { "contactId": userId }, //Kiểm tra userId có trùng với userId truyền vào
         { "userId": contactId },
-        { "status": false} //chưa là bạn bè mới cập nhật
+        { "status": false } //chưa là bạn bè mới cập nhật
       ]
     }, {
       "status": true,
@@ -210,7 +210,7 @@ ContactSchema.statics = {
    * @param {String} userId 
    * @param {String} contactId 
    */
-  updateWhenHasNewMessage(userId,contactId) {
+  updateWhenHasNewMessage(userId, contactId) {
     return this.update({
       $or: [
         //Kiểm tra chéo
@@ -228,9 +228,24 @@ ContactSchema.statics = {
           ]
         }
       ]
-    },{
+    }, {
       "updateAt": Date.now()
     }).exec();
+  },
+
+  //Hàm lấy danh sách user để xuất ra modal tao group chat và gọi ra cho contactService
+  getFriends(userId) {
+    return this.find({
+      $and: [
+        {
+          $or: [
+            { "userId": userId },
+            { "contactId": userId }
+          ]
+        },
+        { "status": true }
+      ]
+    }).sort({ "updateAt": -1 }).exec();//{"updateAt": -1} sắp xếp những ai mới add vào lên đầu
   }
 
 };

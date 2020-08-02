@@ -16,6 +16,9 @@ let ChatGroupSchema = new Schema({
 });
 
 ChatGroupSchema.statics = {
+  createNew(item) {
+    return this.create(item);
+  },
   //Lấy tất cả chat group hiện có của 1 user
   getChatGroups(userId, limit) {
     return this.find({

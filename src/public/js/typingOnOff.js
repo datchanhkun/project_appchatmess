@@ -27,7 +27,7 @@ $(document).ready(function() {
     //Nếu là nhóm
     if(response.currentGroupId) {
       //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
-      if(response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+      if(response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
         //kiểm tra nếu tồn tại click rồi thì không xuất ra gif lần 2
         let checkTyping = $(`.chat[data-chat =${response.currentGroupId}]`).find("div.bubble-typing-gif");
         if(checkTyping.length) {
@@ -37,12 +37,12 @@ $(document).ready(function() {
         nineScrollRight(response.currentGroupId);
       }
     } else {
-      let checkTyping = $(`.chat[data-chat =${response.CurrentUserId}]`).find("div.bubble-typing-gif");
+      let checkTyping = $(`.chat[data-chat =${response.currentUserId}]`).find("div.bubble-typing-gif");
       if(checkTyping.length) {
         return false;
       }
-      $(`.chat[data-chat =${response.CurrentUserId}]`).append(messageTyping);
-      nineScrollRight(response.CurrentUserId);
+      $(`.chat[data-chat =${response.currentUserId}]`).append(messageTyping);
+      nineScrollRight(response.currentUserId);
     }
   });
 
@@ -51,13 +51,13 @@ $(document).ready(function() {
     //Nếu là nhóm
     if(response.currentGroupId) { 
       //kiểm tra nếu currentuserid truyền về khác với id đang đăng nhập vào
-      if(response.CurrentUserId !== $("#dropdown-navbar-user").data("uid")) {
+      if(response.currentUserId !== $("#dropdown-navbar-user").data("uid")) {
         $(`.chat[data-chat =${response.currentGroupId}]`).find("div.bubble-typing-gif").remove();
         nineScrollRight(response.currentGroupId);
       }
     } else {
-      $(`.chat[data-chat =${response.CurrentUserId}]`).find("div.bubble-typing-gif").remove();
-      nineScrollRight(response.CurrentUserId);
+      $(`.chat[data-chat =${response.currentUserId}]`).find("div.bubble-typing-gif").remove();
+      nineScrollRight(response.currentUserId);
     }
   });
 });
