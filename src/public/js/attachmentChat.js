@@ -8,11 +8,11 @@ function attachmentChat(divId) {
     //gioi han kich thuoc cua file anh
     let limit = 1048576; //byte = 1MB
 
-    if (fileData.size > limit) {
-      alertify.notify("Tệp tin upload cho phép tối đa là 1MB!", "error", 7);
-      $(this).val(null);
-      return false;
-    }
+    // if (fileData.size > limit) {
+    //   alertify.notify("Tệp tin upload cho phép tối đa là 1MB!", "error", 7);
+    //   $(this).val(null);
+    //   return false;
+    // }
 
     let targetId = $(this).data("chat");
     let isChatGroup = false;
